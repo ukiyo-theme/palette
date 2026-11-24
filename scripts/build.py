@@ -9,6 +9,7 @@ Targets:
   zed      themes/ukiyo.json for ukiyo-theme/zed
   t3code   themes/*.json for ukiyo-theme/t3code
   extras   terminal and CLI themes for ukiyo-theme/extras
+  preview  assets/*.svg previews and docs/index.html, the palette viewer page
 
 --out is the root of the port's repo. The target's files are written to
 their paths under it. Without --out the files are printed to stdout.
@@ -1169,12 +1170,114 @@ def build_extras(palette):
     return files
 
 
+PREVIEW_GROUPS = [
+    ("Syntax", ["keyword", "func", "string", "type", "number", "constant", "field",
+                "operator", "builtin", "punct", "param", "special", "comment"]),
+    ("Text and UI", ["fg", "fg_dim", "ui_special", "nontext", "border", "visual", "search"]),
+    ("Backgrounds", ["bg0", "bg_m2", "bg_m1", "bg", "bg_p1", "bg_p2", "bg3"]),
+    ("Diagnostics and git", ["error", "warn", "info", "hint", "git_add", "git_change", "git_delete",
+                             "diff_add", "diff_change", "diff_delete", "diff_text"]),
+]
+
+# A short Lua sample, as (role, text) runs per line, shared by the SVG and the page.
+PREVIEW_CODE = [
+    [("comment", "-- Ukiyo: pictures of the floating world")],
+    [("keyword", "local"), ("fg", " "), ("type", "Wave"), ("fg", " "), ("operator", "="),
+     ("fg", " "), ("punct", "{}")],
+    [],
+    [("keyword", "function"), ("fg", " "), ("type", "Wave"), ("punct", "."), ("func", "new"),
+     ("punct", "("), ("param", "height"), ("punct", ","), ("fg", " "), ("param", "color"), ("punct", ")")],
+    [("fg", "  "), ("keyword", "local"), ("fg", " self "), ("operator", "="), ("fg", " "),
+     ("special", "setmetatable"), ("punct", "({"), ("fg", " "), ("field", "height"), ("fg", " "),
+     ("operator", "="), ("fg", " "), ("param", "height"), ("punct", ","), ("fg", " "),
+     ("field", "crest"), ("fg", " "), ("operator", "="), ("fg", " "), ("constant", "true"),
+     ("fg", " "), ("punct", "},"), ("fg", " "), ("type", "Wave"), ("punct", ")")],
+    [("fg", "  self"), ("punct", "."), ("field", "color"), ("fg", " "), ("operator", "="),
+     ("fg", " "), ("param", "color"), ("fg", " "), ("keyword", "or"), ("fg", " "),
+     ("string", '"indigo"')],
+    [("fg", "  "), ("keyword", "if"), ("fg", " "), ("param", "height"), ("fg", " "),
+     ("operator", ">"), ("fg", " "), ("number", "36"), ("fg", " "), ("keyword", "then"),
+     ("fg", " "), ("builtin", "error"), ("punct", "("), ("string", '"too tall"'), ("punct", ")"),
+     ("fg", " "), ("keyword", "end")],
+    [("fg", "  "), ("builtin", "return"), ("fg", " self")],
+    [("keyword", "end")],
+]
+
+
+def svg_escape(text):
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def preview_svg(name, variant):
+    c = variant["colors"]
+    dark = variant["appearance"] == "dark"
+    width, pad, sw, sh, gap, per_row = 960, 32, 80, 40, 10, 10
+    line_h, code_top = 22, 92
+    code_h = len(PREVIEW_CODE) * line_h + 28
+    y = code_top + code_h + 32
+    parts = []
+    for group, roles in PREVIEW_GROUPS:
+        parts.append(f'<text x="{pad}" y="{y}" fill="{c["fg_dim"]}" font-size="13" font-weight="600">{group}</text>')
+        y += 12
+        for i, role in enumerate(roles):
+            x = pad + (i % per_row) * (sw + gap)
+            ry = y + (i // per_row) * (sh + 40)
+            parts.append(f'<rect x="{x}" y="{ry}" width="{sw}" height="{sh}" rx="6" fill="{c[role]}" '
+                         f'stroke="{c["border"]}"/>')
+            parts.append(f'<text x="{x}" y="{ry + sh + 15}" fill="{c["fg"]}" font-size="11">{role}</text>')
+            parts.append(f'<text x="{x}" y="{ry + sh + 29}" fill="{c["comment"]}" font-size="10">{c[role].upper()}</text>')
+        y += ((len(roles) - 1) // per_row + 1) * (sh + 40) + 18
+    height = y + pad - 18
+
+    code = []
+    for i, runs in enumerate(PREVIEW_CODE):
+        ly = code_top + 26 + i * line_h
+        code.append(f'<text x="{pad + 52}" y="{ly}" fill="{c["nontext"]}" font-size="13" text-anchor="end">{i + 1}</text>')
+        if runs:
+            spans = "".join(f'<tspan fill="{c[role]}">{svg_escape(text)}</tspan>' for role, text in runs)
+            code.append(f'<text x="{pad + 68}" y="{ly}" font-size="14" xml:space="preserve">{spans}</text>')
+
+    label = title(name)
+    sub = f'{variant["appearance"]} · bg {c["bg"].upper()}'
+    return "\n".join([
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" '
+        f'font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">',
+        f'<!-- {HEADER} -->',
+        f'<rect width="{width}" height="{height}" rx="14" fill="{c["bg"]}"/>',
+        f'<text x="{pad}" y="{pad + 18}" fill="{c["fg"]}" font-size="22" font-weight="700">{label}</text>',
+        f'<text x="{pad}" y="{pad + 40}" fill="{c["ui_special"]}" font-size="13">{sub}</text>',
+        f'<rect x="{pad}" y="{code_top}" width="{width - 2 * pad}" height="{code_h}" rx="10" fill="{c["bg_m1"]}" stroke="{c["border"]}"/>',
+        f'<rect x="{pad}" y="{code_top + 14 + 3 * line_h - 2}" width="{width - 2 * pad}" height="{line_h}" fill="{c["bg_p2"]}"/>',
+        *code,
+        *parts,
+        "</svg>",
+        "",
+    ])
+
+
+def preview_page(palette):
+    data = {name: {"appearance": v["appearance"], "description": v["description"], "colors": v["colors"]}
+            for name, v in palette["variants"].items()}
+    page = (Path(__file__).resolve().parent / "preview.html").read_text()
+    return (page.replace("/*PALETTE*/null", json.dumps(data))
+                .replace("/*GROUPS*/null", json.dumps(PREVIEW_GROUPS))
+                .replace("/*CODE*/null", json.dumps(PREVIEW_CODE))
+                .replace("/*ROLES*/null", json.dumps(palette["roles"])))
+
+
+def build_preview(palette):
+    files = {f"assets/{name}.svg": preview_svg(name, v) for name, v in palette["variants"].items()}
+    files["docs/index.html"] = preview_page(palette)
+    return files
+
+
 TARGETS = {
     "nvim": build_nvim,
     "vscode": build_vscode,
     "zed": build_zed,
     "t3code": build_t3code,
     "extras": build_extras,
+    "preview": build_preview,
 }
 
 
