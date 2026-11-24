@@ -13,6 +13,9 @@ The source of truth for every Ukiyo port. All colors live in [`palette.json`](pa
 | Port | Repo | Status |
 |---|---|---|
 | Neovim | [ukiyo-theme/nvim](https://github.com/ukiyo-theme/nvim) | Available |
+| VS Code | [ukiyo-theme/vscode](https://github.com/ukiyo-theme/vscode) | Install from source |
+| Zed | [ukiyo-theme/zed](https://github.com/ukiyo-theme/zed) | Install from source |
+| T3 Code | [ukiyo-theme/t3code](https://github.com/ukiyo-theme/t3code) | Install from source |
 
 ## palette.json
 
@@ -24,15 +27,18 @@ Ports should use roles, not specific hex values. For example, a port colors keyw
 
 ## Scripts
 
-Both scripts use only the Python standard library.
+Both scripts use only the Python standard library. The build commands assume every repo is cloned side by side in one folder.
 
 ```sh
 # Print contrast for every role against bg, the cursorline and the selection.
 # Exits with status 1 if any role is below its minimum.
 python3 scripts/check.py
 
-# Generate a port's color file.
-python3 scripts/build.py nvim --out ../nvim/lua/ukiyo/palette.lua
+# Generate a port's files. --out is the root of the port's repo.
+python3 scripts/build.py nvim --out ../nvim
+python3 scripts/build.py vscode --out ../vscode
+python3 scripts/build.py zed --out ../zed
+python3 scripts/build.py t3code --out ../t3code
 ```
 
 ## Changing a color
