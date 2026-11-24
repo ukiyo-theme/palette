@@ -1,5 +1,7 @@
 # Ukiyo palette
 
+![Ukiyo: a moon over a curling wave, with the umi, yoru and kami variants](brand/banner.png)
+
 The source of truth for every Ukiyo port. All colors live in [`palette.json`](palette.json), and the ports are generated from it.
 
 **[View the palette](https://ukiyo-theme.github.io/palette/)**
@@ -72,6 +74,16 @@ python3 scripts/build.py preview --out .
 2. Run `python3 scripts/check.py` and fix anything that fails.
 3. Regenerate each port with `scripts/build.py` and commit the result in that port's repo.
 4. Regenerate the previews with `python3 scripts/build.py preview --out .`.
+
+## Brand
+
+`brand/` holds the logo and banner. The SVGs are the sources; the PNGs are rendered from them.
+
+| File | Use |
+|---|---|
+| `mark.svg`, `mark.png` | Logo with rounded corners. The palette page uses it as its icon. |
+| `avatar.svg`, `avatar.png` | Square logo for avatars, such as the GitHub org. |
+| `banner.svg`, `banner.png` | 1280x640 banner for READMEs and repo social previews. |
 
 ## License
 

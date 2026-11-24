@@ -16,6 +16,7 @@ their paths under it. Without --out the files are printed to stdout.
 """
 import argparse
 import json
+import urllib.parse
 import sys
 from pathlib import Path
 
@@ -1259,7 +1260,12 @@ def preview_page(palette):
     data = {name: {"appearance": v["appearance"], "description": v["description"], "colors": v["colors"]}
             for name, v in palette["variants"].items()}
     page = (Path(__file__).resolve().parent / "preview.html").read_text()
-    return (page.replace("/*PALETTE*/null", json.dumps(data))
+    mark = (ROOT / "brand" / "mark.svg").read_text().strip()
+    favicon = "data:image/svg+xml," + urllib.parse.quote(mark)
+    mark = mark.replace('width="512" height="512" ', 'aria-hidden="true" ', 1)
+    return (page.replace("<!--MARK-->", mark)
+                .replace("/*FAVICON*/", favicon)
+                .replace("/*PALETTE*/null", json.dumps(data))
                 .replace("/*GROUPS*/null", json.dumps(PREVIEW_GROUPS))
                 .replace("/*CODE*/null", json.dumps(PREVIEW_CODE))
                 .replace("/*ROLES*/null", json.dumps(palette["roles"])))

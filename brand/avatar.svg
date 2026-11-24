@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Ukiyo</title>
+  <defs>
+    <clipPath id="frame"><rect width="512" height="512" rx="0"/></clipPath>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="512" height="512" fill="#1A1A22"/>
+    <g fill="#938FB0">
+      <circle cx="96" cy="104" r="3"/>
+      <circle cx="150" cy="70" r="2"/>
+      <circle cx="196" cy="128" r="2.5"/>
+      <circle cx="452" cy="84" r="2.5"/>
+    </g>
+    <!-- moon -->
+    <circle cx="336" cy="168" r="92" fill="#E8C88A"/>
+    <circle cx="336" cy="168" r="78" fill="none" stroke="#D6B77A" stroke-width="3"/>
+    <!-- kasumi: banded mist drifting across the moon -->
+    <g>
+      <rect x="236" y="198" width="236" height="16" rx="8" fill="#3D5378"/>
+      <rect x="196" y="220" width="200" height="16" rx="8" fill="#2D3F5C"/>
+      <rect x="300" y="242" width="150" height="12" rx="6" fill="#252F45"/>
+      <rect x="150" y="128" width="120" height="10" rx="5" fill="#2D3F5C"/>
+    </g>
+    <!-- far swell -->
+    <path d="M0 356 C60 330 112 334 170 352 C230 370 290 340 352 326 C414 312 470 326 512 340 V512 H0 Z" fill="#2D3F5C"/>
+    <path d="M300 352 C350 336 420 330 480 346" fill="none" stroke="#3D5378" stroke-width="5" stroke-linecap="round"/>
+    <!-- great curling wave -->
+    <path d="M0 512 V404 C34 392 62 360 84 318 C112 264 160 230 216 232 C268 234 300 270 290 306 C282 334 250 342 234 324 C222 310 230 290 248 292
+             C236 274 204 272 182 290 C150 316 146 372 186 410 C226 448 300 452 360 430 C420 408 470 400 512 410 V512 Z" fill="#82A8E8"/>
+    <!-- striations on the wave -->
+    <g fill="none" stroke="#6E92CF" stroke-width="5" stroke-linecap="round">
+      <path d="M60 380 C90 340 110 300 140 274"/>
+      <path d="M200 432 C250 452 310 450 360 432"/>
+      <path d="M400 420 C440 410 480 408 512 414"/>
+    </g>
+    <!-- inner face of the wave -->
+    <path d="M0 512 V446 C40 436 72 410 94 372 C112 340 130 312 158 296 C140 334 142 384 178 422 C216 460 292 472 362 452 C422 434 470 430 512 436 V512 Z" fill="#C4A8F5"/>
+    <g fill="none" stroke="#B092E8" stroke-width="5" stroke-linecap="round">
+      <path d="M30 492 C80 480 110 456 130 420"/>
+      <path d="M240 494 C300 500 360 490 420 472"/>
+    </g>
+    <!-- foam along the crest -->
+    <path d="M104 328 C128 288 166 262 212 258" fill="none" stroke="#E2DCC5" stroke-width="6" stroke-linecap="round"/>
+    <g fill="#E2DCC5">
+      <circle cx="262" cy="256" r="8"/>
+      <circle cx="288" cy="246" r="5"/>
+      <circle cx="306" cy="264" r="4"/>
+      <circle cx="244" cy="242" r="4"/>
+      <circle cx="312" cy="240" r="3"/>
+    </g>
+  </g>
+</svg>
