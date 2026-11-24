@@ -16,6 +16,7 @@ The source of truth for every Ukiyo port. All colors live in [`palette.json`](pa
 | VS Code | [ukiyo-theme/vscode](https://github.com/ukiyo-theme/vscode) | Install from source |
 | Zed | [ukiyo-theme/zed](https://github.com/ukiyo-theme/zed) | Install from source |
 | T3 Code | [ukiyo-theme/t3code](https://github.com/ukiyo-theme/t3code) | Install from source |
+| Ghostty, kitty, WezTerm, Alacritty, iTerm2, Helix, tmux, fzf, delta, bat, Sublime Text | [ukiyo-theme/extras](https://github.com/ukiyo-theme/extras) | Install from source |
 
 ## palette.json
 
@@ -39,6 +40,7 @@ python3 scripts/build.py nvim --out ../nvim
 python3 scripts/build.py vscode --out ../vscode
 python3 scripts/build.py zed --out ../zed
 python3 scripts/build.py t3code --out ../t3code
+python3 scripts/build.py extras --out ../extras
 ```
 
 ## Changing a color

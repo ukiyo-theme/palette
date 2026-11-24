@@ -8,6 +8,7 @@ Targets:
   vscode   themes/*.json for ukiyo-theme/vscode
   zed      themes/ukiyo.json for ukiyo-theme/zed
   t3code   themes/*.json for ukiyo-theme/t3code
+  extras   terminal and CLI themes for ukiyo-theme/extras
 
 --out is the root of the port's repo. The target's files are written to
 their paths under it. Without --out the files are printed to stdout.
@@ -752,11 +753,428 @@ def build_t3code(palette):
     return files
 
 
+# Extras: terminals and command-line tools --------------------------------
+
+def each_variant(palette):
+    for name, variant in palette["variants"].items():
+        yield name, variant["colors"], variant["appearance"] == "dark", ansi(variant)
+
+
+def build_ghostty(palette):
+    files = {}
+    for name, c, dark, term in each_variant(palette):
+        lines = [f"# {title(name)}. {HEADER}"]
+        lines += [f"palette = {i}={color}" for i, color in enumerate(term.values())]
+        lines += [
+            f"background = {c['bg']}",
+            f"foreground = {c['fg']}",
+            f"cursor-color = {c['fg']}",
+            f"cursor-text = {c['bg']}",
+            f"selection-background = {c['visual']}",
+            f"selection-foreground = {c['fg']}",
+            f"split-divider-color = {c['border']}",
+        ]
+        files[f"ghostty/ukiyo-{name}"] = "\n".join(lines) + "\n"
+    return files
+
+
+def build_kitty(palette):
+    files = {}
+    for name, c, dark, term in each_variant(palette):
+        on = on_accent(c, dark)
+        lines = [f"# {title(name)}. {HEADER}", "",
+                 f"foreground {c['fg']}", f"background {c['bg']}",
+                 f"selection_foreground {c['fg']}", f"selection_background {c['visual']}",
+                 f"cursor {c['fg']}", f"cursor_text_color {c['bg']}",
+                 f"url_color {c['special']}",
+                 f"active_border_color {c['func']}", f"inactive_border_color {c['border']}",
+                 f"bell_border_color {c['warn']}",
+                 f"tab_bar_background {c['bg0']}",
+                 f"active_tab_foreground {on}", f"active_tab_background {c['func']}",
+                 f"inactive_tab_foreground {c['fg_dim']}", f"inactive_tab_background {c['bg3']}",
+                 f"mark1_foreground {on}", f"mark1_background {c['func']}",
+                 f"mark2_foreground {on}", f"mark2_background {c['keyword']}",
+                 f"mark3_foreground {on}", f"mark3_background {c['type']}", ""]
+        lines += [f"color{i} {color}" for i, color in enumerate(term.values())]
+        files[f"kitty/ukiyo-{name}.conf"] = "\n".join(lines) + "\n"
+    return files
+
+
+def toml_list(colors):
+    return "[" + ", ".join(f'"{c}"' for c in colors) + "]"
+
+
+def build_wezterm(palette):
+    files = {}
+    for name, c, dark, term in each_variant(palette):
+        values = list(term.values())
+        on = on_accent(c, dark)
+        files[f"wezterm/ukiyo-{name}.toml"] = f'''# {HEADER}
+
+[metadata]
+name = "{title(name)}"
+origin_url = "https://github.com/ukiyo-theme/extras"
+
+[colors]
+foreground = "{c['fg']}"
+background = "{c['bg']}"
+cursor_bg = "{c['fg']}"
+cursor_fg = "{c['bg']}"
+cursor_border = "{c['fg']}"
+selection_fg = "{c['fg']}"
+selection_bg = "{c['visual']}"
+scrollbar_thumb = "{c['border']}"
+split = "{c['border']}"
+compose_cursor = "{c['warn']}"
+ansi = {toml_list(values[:8])}
+brights = {toml_list(values[8:])}
+
+[colors.tab_bar]
+background = "{c['bg0']}"
+
+[colors.tab_bar.active_tab]
+bg_color = "{c['bg']}"
+fg_color = "{c['fg']}"
+
+[colors.tab_bar.inactive_tab]
+bg_color = "{c['bg0']}"
+fg_color = "{c['comment']}"
+
+[colors.tab_bar.inactive_tab_hover]
+bg_color = "{c['bg3']}"
+fg_color = "{c['fg']}"
+
+[colors.tab_bar.new_tab]
+bg_color = "{c['bg0']}"
+fg_color = "{c['comment']}"
+
+[colors.tab_bar.new_tab_hover]
+bg_color = "{c['func']}"
+fg_color = "{on}"
+'''
+    return files
+
+
+def build_alacritty(palette):
+    files = {}
+    for name, c, dark, term in each_variant(palette):
+        normal = "\n".join(f'{k} = "{v}"' for k, v in term.items() if not k.startswith("bright_"))
+        bright = "\n".join(f'{k[7:]} = "{v}"' for k, v in term.items() if k.startswith("bright_"))
+        files[f"alacritty/ukiyo-{name}.toml"] = f'''# {title(name)}. {HEADER}
+
+[colors.primary]
+background = "{c['bg']}"
+foreground = "{c['fg']}"
+dim_foreground = "{c['fg_dim']}"
+
+[colors.cursor]
+text = "{c['bg']}"
+cursor = "{c['fg']}"
+
+[colors.vi_mode_cursor]
+text = "{c['bg']}"
+cursor = "{c['func']}"
+
+[colors.selection]
+text = "{c['fg']}"
+background = "{c['visual']}"
+
+[colors.search.matches]
+foreground = "{c['fg']}"
+background = "{c['search']}"
+
+[colors.search.focused_match]
+foreground = "{on_accent(c, dark)}"
+background = "{c['warn']}"
+
+[colors.normal]
+{normal}
+
+[colors.bright]
+{bright}
+'''
+    return files
+
+
+def plist_color(color):
+    r, g, b = (x / 255 for x in rgb(color))
+    return ("<dict>"
+            "<key>Alpha Component</key><real>1</real>"
+            f"<key>Blue Component</key><real>{b:.6f}</real>"
+            "<key>Color Space</key><string>sRGB</string>"
+            f"<key>Green Component</key><real>{g:.6f}</real>"
+            f"<key>Red Component</key><real>{r:.6f}</real>"
+            "</dict>")
+
+
+def build_iterm(palette):
+    files = {}
+    for name, c, dark, term in each_variant(palette):
+        entries = {f"Ansi {i} Color": color for i, color in enumerate(term.values())}
+        entries.update({
+            "Background Color": c["bg"], "Foreground Color": c["fg"], "Bold Color": c["fg"],
+            "Cursor Color": c["fg"], "Cursor Text Color": c["bg"], "Cursor Guide Color": c["bg_p2"],
+            "Selection Color": c["visual"], "Selected Text Color": c["fg"],
+            "Link Color": c["special"], "Badge Color": c["keyword"],
+        })
+        body = "\n".join(f"\t<key>{k}</key>\n\t{plist_color(v)}" for k, v in sorted(entries.items()))
+        files[f"iterm2/ukiyo-{name}.itermcolors"] = f'''<?xml version="1.0" encoding="UTF-8"?>
+<!-- {HEADER} -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+{body}
+</dict>
+</plist>
+'''
+    return files
+
+
+def build_helix(palette):
+    files = {}
+    for name, c, dark, term in each_variant(palette):
+        on = "bg0" if dark else "bg"
+        rules = f'''# {title(name)}. {HEADER}
+
+"attribute" = "constant"
+"type" = "type"
+"type.builtin" = "type"
+"type.enum.variant" = "constant"
+"constructor" = "special"
+"constant" = "constant"
+"constant.builtin.boolean" = {{ fg = "constant", modifiers = ["bold"] }}
+"constant.character" = "string"
+"constant.character.escape" = {{ fg = "operator", modifiers = ["bold"] }}
+"constant.numeric" = "number"
+"string" = "string"
+"string.regexp" = "operator"
+"string.special.symbol" = "field"
+"string.special.url" = {{ fg = "special", underline = {{ style = "curl" }} }}
+"comment" = {{ fg = "comment", modifiers = ["italic"] }}
+"variable" = "fg"
+"variable.builtin" = {{ fg = "builtin", modifiers = ["italic"] }}
+"variable.parameter" = "param"
+"variable.other.member" = "field"
+"label" = "field"
+"punctuation" = "punct"
+"punctuation.special" = "special"
+"keyword" = "keyword"
+"keyword.control.return" = "builtin"
+"keyword.control.exception" = {{ fg = "builtin", modifiers = ["bold"] }}
+"keyword.control.import" = "builtin"
+"keyword.directive" = "builtin"
+"keyword.operator" = {{ fg = "operator", modifiers = ["bold"] }}
+"operator" = "operator"
+"function" = "func"
+"function.builtin" = "special"
+"function.macro" = "builtin"
+"tag" = "keyword"
+"namespace" = "type"
+"special" = "special"
+
+"markup.heading" = {{ fg = "func", modifiers = ["bold"] }}
+"markup.list" = "special"
+"markup.bold" = {{ modifiers = ["bold"] }}
+"markup.italic" = {{ modifiers = ["italic"] }}
+"markup.strikethrough" = {{ modifiers = ["crossed_out"] }}
+"markup.link.url" = {{ fg = "special", underline = {{ style = "line" }} }}
+"markup.link.text" = "func"
+"markup.quote" = "param"
+"markup.raw" = "string"
+
+"diff.plus" = "git_add"
+"diff.minus" = "git_delete"
+"diff.delta" = "git_change"
+
+"ui.background" = {{ bg = "bg" }}
+"ui.text" = "fg"
+"ui.text.focus" = {{ fg = "fg", bg = "visual" }}
+"ui.text.inactive" = "comment"
+"ui.cursor" = {{ fg = "bg", bg = "fg_dim" }}
+"ui.cursor.primary" = {{ fg = "bg", bg = "fg" }}
+"ui.cursor.match" = {{ bg = "bg3", modifiers = ["bold"] }}
+"ui.cursorline.primary" = {{ bg = "bg_p2" }}
+"ui.linenr" = "nontext"
+"ui.linenr.selected" = {{ fg = "warn", modifiers = ["bold"] }}
+"ui.gutter" = {{ bg = "bg" }}
+"ui.statusline" = {{ fg = "fg_dim", bg = "bg0" }}
+"ui.statusline.inactive" = {{ fg = "comment", bg = "bg0" }}
+"ui.statusline.normal" = {{ fg = "{on}", bg = "func", modifiers = ["bold"] }}
+"ui.statusline.insert" = {{ fg = "{on}", bg = "string", modifiers = ["bold"] }}
+"ui.statusline.select" = {{ fg = "{on}", bg = "keyword", modifiers = ["bold"] }}
+"ui.bufferline" = {{ fg = "comment", bg = "bg0" }}
+"ui.bufferline.active" = {{ fg = "fg", bg = "bg" }}
+"ui.popup" = {{ fg = "fg", bg = "bg0" }}
+"ui.window" = "border"
+"ui.help" = {{ fg = "fg", bg = "bg0" }}
+"ui.menu" = {{ fg = "fg", bg = "bg3" }}
+"ui.menu.selected" = {{ bg = "visual" }}
+"ui.menu.scroll" = {{ fg = "border", bg = "bg3" }}
+"ui.selection" = {{ bg = "visual" }}
+"ui.highlight" = {{ bg = "bg_p1" }}
+"ui.virtual.whitespace" = "nontext"
+"ui.virtual.ruler" = {{ bg = "bg_p2" }}
+"ui.virtual.indent-guide" = "bg3"
+"ui.virtual.inlay-hint" = {{ fg = "comment", bg = "bg_p1" }}
+"ui.virtual.jump-label" = {{ fg = "warn", modifiers = ["bold"] }}
+
+"error" = "error"
+"warning" = "warn"
+"info" = "info"
+"hint" = "hint"
+"diagnostic.error" = {{ underline = {{ color = "error", style = "curl" }} }}
+"diagnostic.warning" = {{ underline = {{ color = "warn", style = "curl" }} }}
+"diagnostic.info" = {{ underline = {{ color = "info", style = "curl" }} }}
+"diagnostic.hint" = {{ underline = {{ color = "hint", style = "curl" }} }}
+"diagnostic.unnecessary" = {{ modifiers = ["dim"] }}
+"diagnostic.deprecated" = {{ modifiers = ["crossed_out"] }}
+
+[palette]
+'''
+        rules += "\n".join(f'{role} = "{color}"' for role, color in c.items()) + "\n"
+        files[f"helix/ukiyo_{name}.toml"] = rules
+    return files
+
+
+def build_tmux(palette):
+    files = {}
+    for name, c, dark, term in each_variant(palette):
+        on = on_accent(c, dark)
+        files[f"tmux/ukiyo-{name}.tmux"] = f'''# {title(name)}. {HEADER}
+# Load it with: source-file /path/to/ukiyo-{name}.tmux
+
+set -g status-style "fg={c['fg_dim']},bg={c['bg0']}"
+set -g status-left-style "fg={on},bg={c['func']},bold"
+set -g status-right-style "fg={c['fg_dim']},bg={c['bg3']}"
+set -g window-status-style "fg={c['comment']},bg={c['bg0']}"
+set -g window-status-current-style "fg={c['fg']},bg={c['bg']},bold"
+set -g window-status-activity-style "fg={c['warn']},bg={c['bg0']}"
+set -g window-status-bell-style "fg={c['error']},bg={c['bg0']},bold"
+set -g pane-border-style "fg={c['border']}"
+set -g pane-active-border-style "fg={c['func']}"
+set -g message-style "fg={c['fg']},bg={c['bg3']}"
+set -g message-command-style "fg={c['fg']},bg={c['bg3']}"
+set -g mode-style "fg={c['fg']},bg={c['visual']}"
+set -g copy-mode-match-style "fg={c['fg']},bg={c['search']}"
+set -g copy-mode-current-match-style "fg={on},bg={c['warn']}"
+set -g display-panes-colour "{c['border']}"
+set -g display-panes-active-colour "{c['func']}"
+set -g clock-mode-colour "{c['func']}"
+'''
+    return files
+
+
+def build_fzf(palette):
+    files = {}
+    for name, c, dark, term in each_variant(palette):
+        spec = ",".join([
+            f"fg:{c['fg']}", f"bg:{c['bg']}", f"hl:{c['field']}",
+            f"fg+:{c['fg']}", f"bg+:{c['bg_p2']}", f"hl+:{c['field']}",
+            f"info:{c['comment']}", f"border:{c['border']}", f"separator:{c['bg3']}",
+            f"prompt:{c['func']}", f"pointer:{c['keyword']}", f"marker:{c['string']}",
+            f"spinner:{c['keyword']}", f"header:{c['type']}", f"query:{c['fg']}",
+            f"gutter:{c['bg']}", f"selected-bg:{c['visual']}", f"scrollbar:{c['border']}",
+        ])
+        files[f"fzf/ukiyo-{name}.sh"] = (
+            f"# {title(name)}. {HEADER}\n"
+            f"# Source it from your shell config, after any other FZF_DEFAULT_OPTS.\n"
+            f'export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --color={spec}"\n'
+        )
+    return files
+
+
+def build_delta(palette):
+    sections = [f"# {HEADER}",
+                "# Include this file from ~/.gitconfig, then set [delta] features = ukiyo-umi (or yoru, kami).", ""]
+    for name, c, dark, term in each_variant(palette):
+        add_text = mix(c["diff_add"], c["git_add"], 0.3)
+        del_text = mix(c["diff_delete"], c["git_delete"], 0.3)
+        sections.append(f'''[delta "ukiyo-{name}"]
+    {"dark" if dark else "light"} = true
+    syntax-theme = ukiyo-{name}
+    plus-style = syntax "{c['diff_add']}"
+    plus-emph-style = syntax "{add_text}"
+    plus-non-emph-style = syntax "{c['diff_add']}"
+    minus-style = syntax "{c['diff_delete']}"
+    minus-emph-style = syntax "{del_text}"
+    minus-non-emph-style = syntax "{c['diff_delete']}"
+    line-numbers-plus-style = "{c['git_add']}"
+    line-numbers-minus-style = "{c['git_delete']}"
+    line-numbers-zero-style = "{c['nontext']}"
+    line-numbers-left-style = "{c['nontext']}"
+    line-numbers-right-style = "{c['nontext']}"
+    file-style = "{c['func']}" bold
+    file-decoration-style = "{c['border']}" ul
+    hunk-header-style = file line-number syntax
+    hunk-header-decoration-style = "{c['border']}" box
+    hunk-header-file-style = "{c['func']}"
+    hunk-header-line-number-style = "{c['warn']}"
+    commit-decoration-style = "{c['border']}" box
+    blame-palette = "{c['bg']} {c['bg_p1']} {c['bg_p2']} {c['bg3']}"
+''')
+    return {"delta/ukiyo.gitconfig": "\n".join(sections)}
+
+
+def build_tmtheme(palette):
+    """TextMate theme for bat, delta's syntax highlighting and Sublime Text."""
+    from xml.sax.saxutils import escape
+
+    def kv(key, value):
+        return f"<key>{key}</key><string>{escape(value)}</string>"
+
+    files = {}
+    for name, c, dark, term in each_variant(palette):
+        general = "".join([
+            kv("background", c["bg"]), kv("foreground", c["fg"]), kv("caret", c["fg"]),
+            kv("lineHighlight", c["bg_p2"]), kv("selection", c["visual"]),
+            kv("selectionForeground", c["fg"]), kv("invisibles", c["nontext"]),
+            kv("gutter", c["bg"]), kv("gutterForeground", c["nontext"]),
+            kv("findHighlight", c["search"]), kv("findHighlightForeground", c["fg"]),
+            kv("guide", c["bg3"]), kv("activeGuide", c["border"]),
+        ])
+        rules = [f"<dict><key>settings</key><dict>{general}</dict></dict>"]
+        for rule in vscode_tokens(c):
+            settings = kv("foreground", rule["settings"]["foreground"])
+            if "fontStyle" in rule["settings"]:
+                settings += kv("fontStyle", rule["settings"]["fontStyle"])
+            rules.append("<dict>" + kv("name", rule["name"]) + kv("scope", ", ".join(rule["scope"]))
+                         + f"<key>settings</key><dict>{settings}</dict></dict>")
+        body = "\n\t\t".join(rules)
+        files[f"tmtheme/ukiyo-{name}.tmTheme"] = f'''<?xml version="1.0" encoding="UTF-8"?>
+<!-- {HEADER} -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key><string>{title(name)}</string>
+	<key>author</key><string>{AUTHOR}</string>
+	<key>semanticClass</key><string>theme.{"dark" if dark else "light"}.ukiyo-{name}</string>
+	<key>settings</key>
+	<array>
+		{body}
+	</array>
+</dict>
+</plist>
+'''
+    return files
+
+
+EXTRAS = [build_ghostty, build_kitty, build_wezterm, build_alacritty, build_iterm,
+          build_helix, build_tmux, build_fzf, build_delta, build_tmtheme]
+
+
+def build_extras(palette):
+    files = {}
+    for builder in EXTRAS:
+        files.update(builder(palette))
+    return files
+
+
 TARGETS = {
     "nvim": build_nvim,
     "vscode": build_vscode,
     "zed": build_zed,
     "t3code": build_t3code,
+    "extras": build_extras,
 }
 
 
