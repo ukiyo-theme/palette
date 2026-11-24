@@ -1,0 +1,46 @@
+# Ukiyo palette
+
+The source of truth for every Ukiyo port. All colors live in [`palette.json`](palette.json), and the ports are generated from it.
+
+| Variant | Appearance | Background | Description |
+|---|---|---|---|
+| `umi` (sea) | dark | `#1A1A22` | The default dark variant: ink-blue background, warm text. |
+| `yoru` (night) | dark | `#161514` | Darker and warmer, with less saturated colors. |
+| `kami` (paper) | light | `#D2CCBC` | A light variant at about 60% brightness, between a dark and a light theme. |
+
+## Ports
+
+| Port | Repo | Status |
+|---|---|---|
+| Neovim | [ukiyo-theme/nvim](https://github.com/ukiyo-theme/nvim) | Available |
+
+## palette.json
+
+- `variants.<name>.colors` maps each role to a hex color. Every variant has the same roles.
+- `roles` describes what each role is for, so a new port can map it to the right editor setting.
+- `contrast.minimum` is the lowest WCAG contrast each text role may have against `bg`.
+
+Ports should use roles, not specific hex values. For example, a port colors keywords with `keyword`, not `#C4A8F5`, so all three variants come out of the same mapping.
+
+## Scripts
+
+Both scripts use only the Python standard library.
+
+```sh
+# Print contrast for every role against bg, the cursorline and the selection.
+# Exits with status 1 if any role is below its minimum.
+python3 scripts/check.py
+
+# Generate a port's color file.
+python3 scripts/build.py nvim --out ../nvim/lua/ukiyo/palette.lua
+```
+
+## Changing a color
+
+1. Edit `palette.json`.
+2. Run `python3 scripts/check.py` and fix anything that fails.
+3. Regenerate each port with `scripts/build.py` and commit the result in that port's repo.
+
+## License
+
+MIT
