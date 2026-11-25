@@ -4,7 +4,9 @@
 
 The source of truth for every Ukiyo port. All colors live in [`palette.json`](palette.json), and the ports are generated from it.
 
-**[View the palette](https://ukiyo-theme.github.io/palette/)**
+**[Preview and install Ukiyo](https://ukiyo-theme.github.io/palette/)**
+
+Ink for the floating world. Ukiyo brings the same three palettes to editors, coding agents, and terminals.
 
 ## Variants
 
@@ -35,16 +37,19 @@ Follow the installation instructions in the port repository for your editor, ter
 | Port | Repo | Status |
 |---|---|---|
 | Neovim | [ukiyo-theme/nvim](https://github.com/ukiyo-theme/nvim) | Available |
-| VS Code | [ukiyo-theme/vscode](https://github.com/ukiyo-theme/vscode) | Install from source |
-| Zed | [ukiyo-theme/zed](https://github.com/ukiyo-theme/zed) | Install from source |
-| T3 Code | [ukiyo-theme/t3code](https://github.com/ukiyo-theme/t3code) | Install from source |
-| Ghostty, kitty, WezTerm, Alacritty, iTerm2, Helix, tmux, fzf, delta, bat, Sublime Text | [ukiyo-theme/extras](https://github.com/ukiyo-theme/extras) | Install from source |
+| VS Code, Cursor, VSCodium | [ukiyo-theme/vscode](https://github.com/ukiyo-theme/vscode) | VSIX |
+| Zed | [ukiyo-theme/zed](https://github.com/ukiyo-theme/zed) | Theme file or dev extension |
+| T3 Code | [ukiyo-theme/t3code](https://github.com/ukiyo-theme/t3code) | Theme files |
+| OpenCode, Codex CLI, Claude Code, Pi | [ukiyo-theme/extras](https://github.com/ukiyo-theme/extras#how-to-use) | Theme files |
+| JetBrains IDEs | [ukiyo-theme/extras](https://github.com/ukiyo-theme/extras#jetbrains-ides) | Installable plugin |
+| Ghostty, kitty, WezTerm, Alacritty, iTerm2, Windows Terminal, Helix, tmux, fzf, delta, bat, Sublime Text | [ukiyo-theme/extras](https://github.com/ukiyo-theme/extras#how-to-use) | Theme and config files |
 
 ### Building a new port
 
 - `variants.<name>.colors` maps each role to a hex color. Every variant has the same roles.
 - `roles` describes what each role is for, so a new port can map it to the right editor setting.
 - `contrast.minimum` is the lowest WCAG contrast each text role may have against `bg`.
+- `contrast.surface_minimum` sets minimums for pairs such as comments on a selection and text on diff lines.
 
 Map each editor setting to a palette role, then read that role’s hex value from `variants.<name>.colors` for each variant. For example, map keyword highlighting to `keyword` so the same mapping works across all three variants.
 
@@ -54,7 +59,7 @@ Both scripts use only the Python standard library. The port build commands assum
 
 ```sh
 # Print contrast for every role against bg, the cursorline and the selection.
-# Exits with status 1 if any role is below its minimum.
+# Exits with status 1 if a declared foreground and background pair misses its minimum.
 python3 scripts/check.py
 
 # Generate a port's files. --out is the root of the port's repo.
@@ -64,8 +69,16 @@ python3 scripts/build.py zed --out ../zed
 python3 scripts/build.py t3code --out ../t3code
 python3 scripts/build.py extras --out ../extras
 
-# Regenerate assets/*.svg and docs/index.html.
-python3 scripts/build.py preview --out .
+# Build the Astro homepage, SVG previews, and theme downloads for GitHub Pages.
+npm ci
+npm run build
+```
+
+Run `npm run dev` from this repository to preview the site at `/palette/`. The site build requires Python 3 and Node.js 22.23.4 or newer. Edit `src/pages/index.astro` for the homepage, `src/styles/site.css` for its design and motion, and `scripts/tool_catalog.py` for install instructions. GitHub Pages serves the generated `docs/` directory. When the VS Code themes change, refresh the PNG copies of the SVG previews in `../vscode/images/`, then rebuild the site's VSIX from the VS Code checkout.
+
+```sh
+cd ../vscode
+npx @vscode/vsce package --out ../palette/docs/downloads/ukiyo.vsix
 ```
 
 ## Changing a color
@@ -73,7 +86,7 @@ python3 scripts/build.py preview --out .
 1. Edit `palette.json`.
 2. Run `python3 scripts/check.py` and fix anything that fails.
 3. Regenerate each port with `scripts/build.py` and commit the result in that port's repo.
-4. Regenerate the previews with `python3 scripts/build.py preview --out .`.
+4. Regenerate the previews and homepage with `npm run build`.
 
 ## Brand
 

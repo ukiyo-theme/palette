@@ -1,0 +1,20 @@
+---
+const { directory } = Astro.props;
+---
+  <section class="tools" id="tools" aria-labelledby="tools-title">
+    <h2 id="tools-title">Find your tool</h2>
+    <div class="tool-search" id="tool-search" hidden>
+      <label class="sr-only" for="tool-query">Filter tools</label>
+      <input type="search" id="tool-query" placeholder="Search tools…" autocomplete="off">
+    </div>
+    <p class="section-note" id="no-tools" role="status" hidden>No matching tools. Try a different name.</p>
+    <div id="tool-directory">
+      <Fragment set:html={directory} />
+    </div>
+  </section>
+
+  <details class="palette" id="palette">
+    <summary><h2>Color palette</h2></summary>
+    <p class="section-note">Select a swatch to copy its hex value. Contrast ratios use the editor background of the selected variant. <a href="https://github.com/ukiyo-theme/palette/blob/main/palette.json">Palette source</a></p>
+    <div id="groups"></div>
+  </details>

@@ -43,6 +43,15 @@
   },
   "contrast": {
     "against": "bg",
+    "surface_minimum": {
+      "bg0": {"fg": 4.5, "fg_dim": 4.5},
+      "bg_m1": {"fg": 4.5, "fg_dim": 4.5},
+      "bg_p2": {"fg": 4.5, "fg_dim": 4.5, "comment": 4.5},
+      "bg3": {"fg": 4.5},
+      "visual": {"fg": 4.5, "comment": 4.5},
+      "diff_add": {"fg": 4.5, "fg_dim": 4.5},
+      "diff_delete": {"fg": 4.5, "fg_dim": 4.5}
+    },
     "minimum": {
       "fg": 9.0,
       "fg_dim": 6.0,
@@ -88,7 +97,7 @@
         "ui_special": "#938FB0",
         "fg": "#E2DCC5",
         "fg_dim": "#C8C093",
-        "comment": "#8A8980",
+        "comment": "#ABAAA4",
         "keyword": "#C4A8F5",
         "func": "#82A8E8",
         "string": "#A3C97A",
@@ -132,7 +141,7 @@
         "ui_special": "#9A958A",
         "fg": "#D2CDBF",
         "fg_dim": "#B5B0A3",
-        "comment": "#8C8578",
+        "comment": "#A09A8F",
         "keyword": "#B8A3D6",
         "func": "#8BA4C7",
         "string": "#A3B58A",
@@ -176,7 +185,7 @@
         "ui_special": "#5A5463",
         "fg": "#292830",
         "fg_dim": "#3F3E49",
-        "comment": "#595750",
+        "comment": "#4B4943",
         "keyword": "#523B83",
         "func": "#2B497A",
         "string": "#36561D",

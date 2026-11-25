@@ -1,0 +1,25 @@
+# Tool artwork
+
+- [alacritty](https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/svg/alacritty.svg)
+- [bat](https://raw.githubusercontent.com/sharkdp/bat/master/doc/logo-header.svg)
+- [claude-code](https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/svg/claude-ai.svg)
+- [codex-cli](https://raw.githubusercontent.com/lobehub/lobe-icons/master/packages/static-svg/icons/codex.svg)
+- [cursor](https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/cursor.svg)
+- delta uses a typographic delta symbol.
+- [fzf](https://raw.githubusercontent.com/junegunn/i/master/fzf-color.png)
+- [ghostty](https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/svg/ghostty.svg)
+- [helix](https://raw.githubusercontent.com/helix-editor/helix/master/book/theme/favicon.svg)
+- [iterm2](https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/iterm2.svg)
+- [jetbrains-ides](https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/jetbrains.svg)
+- [kitty](https://raw.githubusercontent.com/kovidgoyal/kitty/master/logo/kitty-128.png)
+- [neovim](https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/svg/neovim.svg)
+- [opencode](https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/svg/opencode.svg)
+- [pi](https://pi.dev/favicon.svg)
+- [sublime-text](https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/sublimetext.svg)
+- [tmux](https://raw.githubusercontent.com/tmux/tmux/master/logo/tmux-logomark.svg)
+- [vs-code](https://raw.githubusercontent.com/homarr-labs/dashboard-icons/main/svg/visual-studio-code.svg)
+- [vscodium](https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/vscodium.svg)
+- [wezterm](https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/wezterm.svg)
+- [windows-terminal](https://raw.githubusercontent.com/microsoft/terminal/main/res/terminal/images/Square44x44Logo.scale-200.png)
+- [zed](https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/zedindustries.svg)
+- T3 Code uses the icon bundled with the T3 Code desktop app.

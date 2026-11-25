@@ -1,0 +1,124 @@
+<div class="switches view-controls" id="views" role="group" aria-label="Preview surface" hidden>
+      <button class="editor-view" type="button" aria-controls="editor-preview" data-view="editor">Editor</button>
+      <button type="button" aria-controls="t3-preview" data-view="t3">T3 Code</button>
+      <button type="button" aria-controls="opencode-preview" data-view="opencode">OpenCode</button>
+      <button type="button" aria-controls="terminal-preview" data-view="terminal">Terminal</button>
+    </div>
+
+    <div class="workspace">
+      <section id="editor-preview" class="scene" aria-labelledby="editor-title">
+        <div class="pane-bar"><h3 id="editor-title">Editor</h3></div>
+        <div class="switches language-switcher" id="languages" role="group" aria-label="Editor language"></div>
+        <figure class="sample" id="typescript" data-language="TypeScript">
+          <figcaption><code>tides.ts</code> <span>Cache the day’s tide times</span></figcaption>
+          <pre is:raw><code><span class="keyword">export async function</span> <span class="function">getTides</span>(day: <span class="type">string</span>) {
+  <span class="comment">// Reuse a recent forecast.</span>
+  <span class="keyword">const</span> cached = cache.<span class="function">get</span>(day);
+  <span class="keyword">if</span> (cached) <span class="keyword">return</span> cached;
+
+  <span class="keyword">const</span> tides = <span class="keyword">await</span> <span class="function">readTides</span>(day);
+  cache.<span class="function">set</span>(day, tides, { <span class="field">ttl</span>: <span class="number">300_000</span> });
+  <span class="keyword">return</span> tides;
+}</code></pre>
+        </figure>
+      <figure class="sample" id="python" data-language="Python" hidden>
+        <figcaption><code>words.py</code> <span>Count words</span></figcaption>
+        <pre is:raw><code><span class="keyword">from</span> collections <span class="keyword">import</span> <span class="type">Counter</span>
+
+text = <span class="string">"wind over water over sand"</span>
+words = <span class="type">Counter</span>(text.<span class="function">split</span>())
+<span class="function">print</span>(words.<span class="function">most_common</span>(<span class="number">1</span>))</code></pre>
+      </figure>
+      <figure class="sample" id="rust" data-language="Rust" hidden>
+        <figcaption><code>temperature.rs</code> <span>Convert Fahrenheit to Celsius</span></figcaption>
+        <pre is:raw><code><span class="keyword">fn</span> <span class="function">celsius</span>(raw: &amp;<span class="type">str</span>) -&gt; <span class="type">Option</span>&lt;<span class="type">f32</span>&gt; {
+    <span class="keyword">let</span> fahrenheit: <span class="type">f32</span> = raw.<span class="function">parse</span>().<span class="function">ok</span>()?;
+    <span class="keyword">let</span> offset = fahrenheit - <span class="number">32.0</span>;
+    <span class="type">Some</span>(offset * <span class="number">5.0</span> / <span class="number">9.0</span>)
+}</code></pre>
+      </figure>
+      <figure class="sample" id="go" data-language="Go" hidden>
+        <figcaption><code>health.go</code> <span>Serve a health check</span></figcaption>
+        <pre is:raw><code><span class="keyword">package</span> health
+
+<span class="keyword">import</span> <span class="string">"net/http"</span>
+
+<span class="keyword">func</span> <span class="function">check</span>(w http.<span class="type">ResponseWriter</span>, _ *http.<span class="type">Request</span>) {
+    w.<span class="function">WriteHeader</span>(http.<span class="constant">StatusNoContent</span>)
+}</code></pre>
+      </figure>
+      <figure class="sample" id="lua" data-language="Lua" hidden>
+        <figcaption><code>options.lua</code> <span>Set up Neovim</span></figcaption>
+        <pre is:raw><code><span class="comment">-- Keep context while scrolling.</span>
+vim.opt.<span class="field">scrolloff</span> = <span class="number">6</span>
+vim.opt.<span class="field">number</span> = <span class="constant">true</span>
+vim.cmd.<span class="function">colorscheme</span>(<span class="string">"ukiyo"</span>)</code></pre>
+      </figure>
+      <figure class="sample" id="sql" data-language="SQL" hidden>
+        <figcaption><code>routes.sql</code> <span>Rank ferry routes</span></figcaption>
+        <pre is:raw><code><span class="keyword">SELECT</span> route, <span class="function">COUNT</span>(*) <span class="keyword">AS</span> trips
+<span class="keyword">FROM</span> ferry_log
+<span class="keyword">GROUP BY</span> route
+<span class="keyword">ORDER BY</span> trips <span class="keyword">DESC</span>
+<span class="keyword">LIMIT</span> <span class="number">3</span>;</code></pre>
+      </figure>
+      </section>
+
+      <div id="workflow" hidden>
+        <section class="scene" id="t3-preview" aria-labelledby="t3-title">
+          <div class="conversation">
+            <div class="pane-bar conversation-bar">
+              <h3 id="t3-title">T3 Code</h3>
+              <a href="#install-t3-code">Install for T3 Code</a>
+            </div>
+            <div class="conversation-body">
+              <div class="t3-sidebar">
+                <div>Threads</div>
+                <div class="thread-title">Cache tide times</div>
+              </div>
+              <div class="thread">
+                <p class="message">Cache today’s tide times for five minutes.</p>
+                <p>The forecast now stays in the cache for five minutes.</p>
+                <div class="diff">
+                  <code class="diff-file">tides.ts</code>
+                  <pre is:raw tabindex="0" aria-label="Changes to tides.ts"><code><span class="diff-line removed">- cache.set(day, tides);</span><span class="diff-line added">+ cache.set(day, tides, { ttl: 300_000 });</span></code></pre>
+                </div>
+                <p class="tool-output"><span class="pass">PASS</span> tides.test.ts <span class="muted">(3 tests)</span></p>
+                <p class="composer">Reply to thread</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="scene" id="opencode-preview" aria-labelledby="opencode-title" hidden>
+          <div class="conversation opencode">
+            <div class="pane-bar conversation-bar">
+              <h3 id="opencode-title">OpenCode</h3>
+              <a href="#install-opencode">Install for OpenCode</a>
+            </div>
+            <div class="thread">
+              <p class="message">Cache today’s tide times for five minutes.</p>
+              <p><strong class="prompt-label">Build</strong> · Updated the forecast cache.</p>
+              <div class="diff">
+                <code class="diff-file">tides.ts</code>
+                <pre is:raw tabindex="0" aria-label="Changes to tides.ts"><code><span class="diff-line removed">- cache.set(day, tides);</span><span class="diff-line added">+ cache.set(day, tides, { ttl: 300_000 });</span></code></pre>
+              </div>
+              <p class="tool-output"><span class="pass">PASS</span> tides.test.ts (3 tests)</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="scene terminal" id="terminal-preview" aria-labelledby="terminal-title" hidden>
+          <div class="pane-bar"><h3 id="terminal-title">Terminal</h3></div>
+          <pre class="terminal-output" tabindex="0"><code><span class="path">tides</span> <span class="muted">$</span> npm test -- tides
+
+<span class="pass">PASS</span> tides.test.ts
+  <span class="pass">✓</span> fetches today’s tide times
+  <span class="pass">✓</span> reuses a cached forecast
+  <span class="pass">✓</span> refreshes after five minutes
+
+<span class="muted">Tests:</span>  <span class="pass">3 passed</span>
+<span class="path">tides</span> <span class="muted">$</span></code></pre>
+        </section>
+      </div>
+    </div>

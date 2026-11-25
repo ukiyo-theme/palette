@@ -1,0 +1,14 @@
+{
+  "name": "ukiyo-homepage",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "python3 scripts/build.py preview --out . && astro build && cp -R dist/index.html dist/site-assets dist/licenses dist/tool-icons docs/"
+  },
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "astro": "^7.4.13"
+  }
+}

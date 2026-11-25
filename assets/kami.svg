@@ -6,7 +6,7 @@
 <rect x="32" y="92" width="896" height="226" rx="10" fill="#CEC8B8" stroke="#989280"/>
 <rect x="32" y="170" width="896" height="22" fill="#CAC3B1"/>
 <text x="84" y="118" fill="#8D8777" font-size="13" text-anchor="end">1</text>
-<text x="100" y="118" font-size="14" xml:space="preserve"><tspan fill="#595750">-- Ukiyo: pictures of the floating world</tspan></text>
+<text x="100" y="118" font-size="14" xml:space="preserve"><tspan fill="#4B4943">-- Ukiyo: pictures of the floating world</tspan></text>
 <text x="84" y="140" fill="#8D8777" font-size="13" text-anchor="end">2</text>
 <text x="100" y="140" font-size="14" xml:space="preserve"><tspan fill="#523B83">local</tspan><tspan fill="#292830"> </tspan><tspan fill="#22564D">Wave</tspan><tspan fill="#292830"> </tspan><tspan fill="#604E22">=</tspan><tspan fill="#292830"> </tspan><tspan fill="#485064">{}</tspan></text>
 <text x="84" y="162" fill="#8D8777" font-size="13" text-anchor="end">3</text>
@@ -25,119 +25,119 @@
 <text x="32" y="350" fill="#3F3E49" font-size="13" font-weight="600">Syntax</text>
 <rect x="32" y="362" width="80" height="40" rx="6" fill="#523B83" stroke="#989280"/>
 <text x="32" y="417" fill="#292830" font-size="11">keyword</text>
-<text x="32" y="431" fill="#595750" font-size="10">#523B83</text>
+<text x="32" y="431" fill="#4B4943" font-size="10">#523B83</text>
 <rect x="122" y="362" width="80" height="40" rx="6" fill="#2B497A" stroke="#989280"/>
 <text x="122" y="417" fill="#292830" font-size="11">func</text>
-<text x="122" y="431" fill="#595750" font-size="10">#2B497A</text>
+<text x="122" y="431" fill="#4B4943" font-size="10">#2B497A</text>
 <rect x="212" y="362" width="80" height="40" rx="6" fill="#36561D" stroke="#989280"/>
 <text x="212" y="417" fill="#292830" font-size="11">string</text>
-<text x="212" y="431" fill="#595750" font-size="10">#36561D</text>
+<text x="212" y="431" fill="#4B4943" font-size="10">#36561D</text>
 <rect x="302" y="362" width="80" height="40" rx="6" fill="#22564D" stroke="#989280"/>
 <text x="302" y="417" fill="#292830" font-size="11">type</text>
-<text x="302" y="431" fill="#595750" font-size="10">#22564D</text>
+<text x="302" y="431" fill="#4B4943" font-size="10">#22564D</text>
 <rect x="392" y="362" width="80" height="40" rx="6" fill="#7F3451" stroke="#989280"/>
 <text x="392" y="417" fill="#292830" font-size="11">number</text>
-<text x="392" y="431" fill="#595750" font-size="10">#7F3451</text>
+<text x="392" y="431" fill="#4B4943" font-size="10">#7F3451</text>
 <rect x="482" y="362" width="80" height="40" rx="6" fill="#7B4116" stroke="#989280"/>
 <text x="482" y="417" fill="#292830" font-size="11">constant</text>
-<text x="482" y="431" fill="#595750" font-size="10">#7B4116</text>
+<text x="482" y="431" fill="#4B4943" font-size="10">#7B4116</text>
 <rect x="572" y="362" width="80" height="40" rx="6" fill="#674B0F" stroke="#989280"/>
 <text x="572" y="417" fill="#292830" font-size="11">field</text>
-<text x="572" y="431" fill="#595750" font-size="10">#674B0F</text>
+<text x="572" y="431" fill="#4B4943" font-size="10">#674B0F</text>
 <rect x="662" y="362" width="80" height="40" rx="6" fill="#604E22" stroke="#989280"/>
 <text x="662" y="417" fill="#292830" font-size="11">operator</text>
-<text x="662" y="431" fill="#595750" font-size="10">#604E22</text>
+<text x="662" y="431" fill="#4B4943" font-size="10">#604E22</text>
 <rect x="752" y="362" width="80" height="40" rx="6" fill="#892D38" stroke="#989280"/>
 <text x="752" y="417" fill="#292830" font-size="11">builtin</text>
-<text x="752" y="431" fill="#595750" font-size="10">#892D38</text>
+<text x="752" y="431" fill="#4B4943" font-size="10">#892D38</text>
 <rect x="842" y="362" width="80" height="40" rx="6" fill="#485064" stroke="#989280"/>
 <text x="842" y="417" fill="#292830" font-size="11">punct</text>
-<text x="842" y="431" fill="#595750" font-size="10">#485064</text>
+<text x="842" y="431" fill="#4B4943" font-size="10">#485064</text>
 <rect x="32" y="442" width="80" height="40" rx="6" fill="#514967" stroke="#989280"/>
 <text x="32" y="497" fill="#292830" font-size="11">param</text>
-<text x="32" y="511" fill="#595750" font-size="10">#514967</text>
+<text x="32" y="511" fill="#4B4943" font-size="10">#514967</text>
 <rect x="122" y="442" width="80" height="40" rx="6" fill="#235367" stroke="#989280"/>
 <text x="122" y="497" fill="#292830" font-size="11">special</text>
-<text x="122" y="511" fill="#595750" font-size="10">#235367</text>
-<rect x="212" y="442" width="80" height="40" rx="6" fill="#595750" stroke="#989280"/>
+<text x="122" y="511" fill="#4B4943" font-size="10">#235367</text>
+<rect x="212" y="442" width="80" height="40" rx="6" fill="#4B4943" stroke="#989280"/>
 <text x="212" y="497" fill="#292830" font-size="11">comment</text>
-<text x="212" y="511" fill="#595750" font-size="10">#595750</text>
+<text x="212" y="511" fill="#4B4943" font-size="10">#4B4943</text>
 <text x="32" y="540" fill="#3F3E49" font-size="13" font-weight="600">Text and UI</text>
 <rect x="32" y="552" width="80" height="40" rx="6" fill="#292830" stroke="#989280"/>
 <text x="32" y="607" fill="#292830" font-size="11">fg</text>
-<text x="32" y="621" fill="#595750" font-size="10">#292830</text>
+<text x="32" y="621" fill="#4B4943" font-size="10">#292830</text>
 <rect x="122" y="552" width="80" height="40" rx="6" fill="#3F3E49" stroke="#989280"/>
 <text x="122" y="607" fill="#292830" font-size="11">fg_dim</text>
-<text x="122" y="621" fill="#595750" font-size="10">#3F3E49</text>
+<text x="122" y="621" fill="#4B4943" font-size="10">#3F3E49</text>
 <rect x="212" y="552" width="80" height="40" rx="6" fill="#5A5463" stroke="#989280"/>
 <text x="212" y="607" fill="#292830" font-size="11">ui_special</text>
-<text x="212" y="621" fill="#595750" font-size="10">#5A5463</text>
+<text x="212" y="621" fill="#4B4943" font-size="10">#5A5463</text>
 <rect x="302" y="552" width="80" height="40" rx="6" fill="#8D8777" stroke="#989280"/>
 <text x="302" y="607" fill="#292830" font-size="11">nontext</text>
-<text x="302" y="621" fill="#595750" font-size="10">#8D8777</text>
+<text x="302" y="621" fill="#4B4943" font-size="10">#8D8777</text>
 <rect x="392" y="552" width="80" height="40" rx="6" fill="#989280" stroke="#989280"/>
 <text x="392" y="607" fill="#292830" font-size="11">border</text>
-<text x="392" y="621" fill="#595750" font-size="10">#989280</text>
+<text x="392" y="621" fill="#4B4943" font-size="10">#989280</text>
 <rect x="482" y="552" width="80" height="40" rx="6" fill="#B2BAC8" stroke="#989280"/>
 <text x="482" y="607" fill="#292830" font-size="11">visual</text>
-<text x="482" y="621" fill="#595750" font-size="10">#B2BAC8</text>
+<text x="482" y="621" fill="#4B4943" font-size="10">#B2BAC8</text>
 <rect x="572" y="552" width="80" height="40" rx="6" fill="#A2B0C6" stroke="#989280"/>
 <text x="572" y="607" fill="#292830" font-size="11">search</text>
-<text x="572" y="621" fill="#595750" font-size="10">#A2B0C6</text>
+<text x="572" y="621" fill="#4B4943" font-size="10">#A2B0C6</text>
 <text x="32" y="650" fill="#3F3E49" font-size="13" font-weight="600">Backgrounds</text>
 <rect x="32" y="662" width="80" height="40" rx="6" fill="#C8C2B0" stroke="#989280"/>
 <text x="32" y="717" fill="#292830" font-size="11">bg0</text>
-<text x="32" y="731" fill="#595750" font-size="10">#C8C2B0</text>
+<text x="32" y="731" fill="#4B4943" font-size="10">#C8C2B0</text>
 <rect x="122" y="662" width="80" height="40" rx="6" fill="#CBC5B4" stroke="#989280"/>
 <text x="122" y="717" fill="#292830" font-size="11">bg_m2</text>
-<text x="122" y="731" fill="#595750" font-size="10">#CBC5B4</text>
+<text x="122" y="731" fill="#4B4943" font-size="10">#CBC5B4</text>
 <rect x="212" y="662" width="80" height="40" rx="6" fill="#CEC8B8" stroke="#989280"/>
 <text x="212" y="717" fill="#292830" font-size="11">bg_m1</text>
-<text x="212" y="731" fill="#595750" font-size="10">#CEC8B8</text>
+<text x="212" y="731" fill="#4B4943" font-size="10">#CEC8B8</text>
 <rect x="302" y="662" width="80" height="40" rx="6" fill="#D2CCBC" stroke="#989280"/>
 <text x="302" y="717" fill="#292830" font-size="11">bg</text>
-<text x="302" y="731" fill="#595750" font-size="10">#D2CCBC</text>
+<text x="302" y="731" fill="#4B4943" font-size="10">#D2CCBC</text>
 <rect x="392" y="662" width="80" height="40" rx="6" fill="#CDC7B6" stroke="#989280"/>
 <text x="392" y="717" fill="#292830" font-size="11">bg_p1</text>
-<text x="392" y="731" fill="#595750" font-size="10">#CDC7B6</text>
+<text x="392" y="731" fill="#4B4943" font-size="10">#CDC7B6</text>
 <rect x="482" y="662" width="80" height="40" rx="6" fill="#CAC3B1" stroke="#989280"/>
 <text x="482" y="717" fill="#292830" font-size="11">bg_p2</text>
-<text x="482" y="731" fill="#595750" font-size="10">#CAC3B1</text>
+<text x="482" y="731" fill="#4B4943" font-size="10">#CAC3B1</text>
 <rect x="572" y="662" width="80" height="40" rx="6" fill="#C2BBA8" stroke="#989280"/>
 <text x="572" y="717" fill="#292830" font-size="11">bg3</text>
-<text x="572" y="731" fill="#595750" font-size="10">#C2BBA8</text>
+<text x="572" y="731" fill="#4B4943" font-size="10">#C2BBA8</text>
 <text x="32" y="760" fill="#3F3E49" font-size="13" font-weight="600">Diagnostics and git</text>
 <rect x="32" y="772" width="80" height="40" rx="6" fill="#981F2E" stroke="#989280"/>
 <text x="32" y="827" fill="#292830" font-size="11">error</text>
-<text x="32" y="841" fill="#595750" font-size="10">#981F2E</text>
+<text x="32" y="841" fill="#4B4943" font-size="10">#981F2E</text>
 <rect x="122" y="772" width="80" height="40" rx="6" fill="#82450B" stroke="#989280"/>
 <text x="122" y="827" fill="#292830" font-size="11">warn</text>
-<text x="122" y="841" fill="#595750" font-size="10">#82450B</text>
+<text x="122" y="841" fill="#4B4943" font-size="10">#82450B</text>
 <rect x="212" y="772" width="80" height="40" rx="6" fill="#20547A" stroke="#989280"/>
 <text x="212" y="827" fill="#292830" font-size="11">info</text>
-<text x="212" y="841" fill="#595750" font-size="10">#20547A</text>
+<text x="212" y="841" fill="#4B4943" font-size="10">#20547A</text>
 <rect x="302" y="772" width="80" height="40" rx="6" fill="#23594F" stroke="#989280"/>
 <text x="302" y="827" fill="#292830" font-size="11">hint</text>
-<text x="302" y="841" fill="#595750" font-size="10">#23594F</text>
+<text x="302" y="841" fill="#4B4943" font-size="10">#23594F</text>
 <rect x="392" y="772" width="80" height="40" rx="6" fill="#34611E" stroke="#989280"/>
 <text x="392" y="827" fill="#292830" font-size="11">git_add</text>
-<text x="392" y="841" fill="#595750" font-size="10">#34611E</text>
+<text x="392" y="841" fill="#4B4943" font-size="10">#34611E</text>
 <rect x="482" y="772" width="80" height="40" rx="6" fill="#705210" stroke="#989280"/>
 <text x="482" y="827" fill="#292830" font-size="11">git_change</text>
-<text x="482" y="841" fill="#595750" font-size="10">#705210</text>
+<text x="482" y="841" fill="#4B4943" font-size="10">#705210</text>
 <rect x="572" y="772" width="80" height="40" rx="6" fill="#9D2F3B" stroke="#989280"/>
 <text x="572" y="827" fill="#292830" font-size="11">git_delete</text>
-<text x="572" y="841" fill="#595750" font-size="10">#9D2F3B</text>
+<text x="572" y="841" fill="#4B4943" font-size="10">#9D2F3B</text>
 <rect x="662" y="772" width="80" height="40" rx="6" fill="#BFC9AD" stroke="#989280"/>
 <text x="662" y="827" fill="#292830" font-size="11">diff_add</text>
-<text x="662" y="841" fill="#595750" font-size="10">#BFC9AD</text>
+<text x="662" y="841" fill="#4B4943" font-size="10">#BFC9AD</text>
 <rect x="752" y="772" width="80" height="40" rx="6" fill="#BEC4CD" stroke="#989280"/>
 <text x="752" y="827" fill="#292830" font-size="11">diff_change</text>
-<text x="752" y="841" fill="#595750" font-size="10">#BEC4CD</text>
+<text x="752" y="841" fill="#4B4943" font-size="10">#BEC4CD</text>
 <rect x="842" y="772" width="80" height="40" rx="6" fill="#D5BAB8" stroke="#989280"/>
 <text x="842" y="827" fill="#292830" font-size="11">diff_delete</text>
-<text x="842" y="841" fill="#595750" font-size="10">#D5BAB8</text>
+<text x="842" y="841" fill="#4B4943" font-size="10">#D5BAB8</text>
 <rect x="32" y="852" width="80" height="40" rx="6" fill="#A7B4C6" stroke="#989280"/>
 <text x="32" y="907" fill="#292830" font-size="11">diff_text</text>
-<text x="32" y="921" fill="#595750" font-size="10">#A7B4C6</text>
+<text x="32" y="921" fill="#4B4943" font-size="10">#A7B4C6</text>
 </svg>

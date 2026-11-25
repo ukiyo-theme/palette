@@ -1,8 +1,8 @@
 """Check every color in palette.json against the contrast minimums it declares.
 
 Prints a table per variant with contrast against the background, the cursorline
-(bg_p2) and the visual selection. Exits with status 1 if any color is below its
-minimum against the background.
+(bg_p2) and the visual selection. Exits with status 1 if any declared contrast
+pair is below its minimum.
 
 Usage: python3 scripts/check.py [path/to/palette.json]
 """
@@ -28,6 +28,7 @@ def main():
     path = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "palette.json"
     palette = json.loads(path.read_text())
     minimums = palette["contrast"]["minimum"]
+    surface_minimums = palette["contrast"].get("surface_minimum", {})
     failures = []
 
     for name, variant in palette["variants"].items():
@@ -43,6 +44,11 @@ def main():
                 failures.append(f"{name}.{role} {color}: {ratio:.2f} < {minimum}")
             print(f"  {role:11} {color} {ratio:6.2f} {minimum:5.1f} "
                   f"{contrast(color, cursorline):7.2f} {contrast(color, visual):7.2f}{flag}")
+        for surface, roles in surface_minimums.items():
+            for role, minimum in roles.items():
+                ratio = contrast(colors[role], colors[surface])
+                if ratio < minimum:
+                    failures.append(f"{name}.{role} on {surface}: {ratio:.2f} < {minimum}")
         print()
 
     if failures:
@@ -50,7 +56,7 @@ def main():
         for failure in failures:
             print("  " + failure)
         sys.exit(1)
-    print("All colors meet their minimum contrast against bg.")
+    print("All declared color pairs meet their minimum contrast.")
 
 
 if __name__ == "__main__":
