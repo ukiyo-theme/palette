@@ -74,7 +74,7 @@ npm ci
 npm run build
 ```
 
-Run `npm run dev` from this repository to preview the site at `/palette/`. The site build requires Python 3 and Node.js 22.23.4 or newer. Edit `src/pages/index.astro` for the homepage, `src/styles/site.css` for its design and motion, and `scripts/tool_catalog.py` for install instructions. GitHub Pages serves the generated `docs/` directory. When the VS Code themes change, refresh the PNG copies of the SVG previews in `../vscode/images/`, then rebuild the site's VSIX from the VS Code checkout.
+Run `npm run dev` from this repository to preview the site at `/palette/`. The site build requires Python 3 and Node.js 22.23.4 or newer. Edit `src/pages/index.astro` for the homepage, `src/styles/site.css` for its design and motion, `src/scripts/sea.js` for the animated WebGL background, and `scripts/tool_catalog.py` for install instructions. GitHub Pages serves the generated `docs/` directory. When the VS Code themes change, refresh the PNG copies of the SVG previews in `../vscode/images/`, then rebuild the site's VSIX from the VS Code checkout.
 
 ```sh
 cd ../vscode

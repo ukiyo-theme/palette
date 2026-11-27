@@ -7,31 +7,75 @@ import Directory from '../components/Directory.astro';
 import Palette from '../components/Palette.astro';
 import Seascape from '../components/Seascape.astro';
 import Workbench from '../components/Workbench.astro';
+import { accentRole, descriptions, seals } from '../scripts/variants.js';
 import mark from '../../brand/mark.svg?raw';
 
 const { directory, ...data } = JSON.parse(execFileSync('python3', ['scripts/site_data.py'], { encoding: 'utf8' }));
+const variants = Object.entries(data.variants);
+const names = Object.keys(data.variants);
+
+// Every role becomes a variable on <html>, so the whole page can follow the selected variant.
+const themeCss = variants.map(([name, variant]) => {
+  const roles = Object.entries({ ...variant.colors, ...variant.preview }).map(([role, hex]) => `--${role}:${hex}`).join(';');
+  return `:root[data-theme="${name}"]{color-scheme:${variant.appearance};${roles};--moon:var(--${accentRole[name]})}`;
+}).join('\n');
+
+const editionStyle = (name, variant) =>
+  `--edition-bg:${variant.colors.bg};--edition-fg:${variant.colors.fg};--edition-accent:${variant.colors[accentRole[name]]}`;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="umi">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>karazuri | Ink for the floating world</title>
   <meta name="description" content="Explore karazuri, a color theme for editors, coding agents, and terminals. Try three variants and find your install."/>
+  <meta name="theme-color" content={data.variants.umi.colors.bg0}/>
   <meta property="og:image" content="https://raw.githubusercontent.com/karazuri/palette/main/brand/banner.png"/>
   <link rel="icon" href={'data:image/svg+xml,' + encodeURIComponent(mark)}/>
+  <script is:inline define:vars={{ names, light: names.find(name => data.variants[name].appearance === 'light'), bg0: Object.fromEntries(variants.map(([name, v]) => [name, v.colors.bg0])) }}>
+    // Pick the variant before the first paint so the page never flashes the wrong one.
+    let theme = location.hash.slice(1);
+    if (!names.includes(theme)) {
+      try { theme = localStorage.getItem('karazuri-variant'); } catch {}
+    }
+    if (!names.includes(theme)) theme = matchMedia('(prefers-color-scheme: light)').matches ? light : names[0];
+    document.documentElement.dataset.theme = theme;
+    document.querySelector('meta[name="theme-color"]').content = bg0[theme];
+  </script>
+  <style is:inline set:html={themeCss}></style>
 </head>
 <body id="home">
+  <canvas class="sea" aria-hidden="true"></canvas>
   <a class="skip-link" href="#preview">Skip to preview</a>
-  <header class="topbar page-width">
-    <a class="signature" href="#home" aria-label="Karazuri home"><span class="seal" aria-hidden="true"></span><span lang="ja">空摺</span></a>
-    <nav aria-label="Main navigation"><a href="#tools">Install</a><a href="https://github.com/karazuri/palette">GitHub <span aria-hidden="true">↗</span></a></nav>
+  <header class="topbar">
+    <div class="topbar-inner page-width">
+      <a class="signature" href="#home" aria-label="Karazuri home"><span class="seal" aria-hidden="true"></span><span lang="ja">空摺</span></a>
+      <div class="topbar-end">
+        <div class="seal-switcher variant-control" role="group" aria-label="Theme variant">
+          {variants.map(([name, variant], index) => <button type="button" data-variant={name} aria-pressed={name === 'umi'} title={`${variant.name}, ${descriptions[name].toLowerCase()} (${index + 1})`} style={editionStyle(name, variant)}>
+            <span lang="ja" aria-hidden="true">{seals[name]}</span><span class="sr-only">{variant.name}</span>
+          </button>)}
+        </div>
+        <nav aria-label="Main navigation"><a href="#tools">Install</a><a href="https://github.com/karazuri/palette">GitHub <span aria-hidden="true">↗</span></a></nav>
+      </div>
+    </div>
   </header>
   <main>
     <section class="hero page-width" aria-labelledby="headline">
       <Seascape/>
       <h1 id="headline">karazuri</h1>
-      <p>A color theme for editors, coding agents, and terminals.</p>
+      <p>A color theme for editors, coding agents, and terminals. Pick an ink and the whole page is printed in it.</p>
+      <div class="variant-picker variant-control" role="group" aria-label="Theme variant">
+        {variants.map(([name, variant]) => <button type="button" data-variant={name} aria-pressed={name === 'umi'} style={editionStyle(name, variant)}>
+          <span class="variant-seal" lang="ja" aria-hidden="true">{seals[name]}</span>
+          <span class="variant-text"><strong>{variant.name}</strong><small>{descriptions[name]}</small></span>
+          <span class="variant-inks" aria-hidden="true">
+            {['keyword', 'func', 'string', 'type', 'constant'].map(role => <i style={`background:${variant.colors[role]}`}></i>)}
+          </span>
+        </button>)}
+      </div>
+      <p class="key-hint variant-control" aria-hidden="true">Press <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> or <kbd>T</kbd> anywhere to switch.</p>
     </section>
     <div class="page-width">
       <Workbench variants={data.variants}/>

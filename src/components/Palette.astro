@@ -9,37 +9,101 @@ interface Props {
 
 const { variants, groups, roles } = Astro.props;
 const { colors } = variants.umi;
-const style = ['bg', 'fg', 'fg_dim', 'border', 'func'].map(role => `--${role}:${colors[role]}`).join(';');
+const style = Object.entries(colors).map(([role, hex]) => `--${role}:${hex}`).join(';');
+
+// A small editor where every palette role appears at least once. Hovering a swatch lights up its uses.
+type Run = string | [role: string, text: string] | { surface: string; runs: Run[] } | { underline: string; runs: Run[] };
+interface Line { runs: Run[]; number?: number; sign?: string; surface?: string; note?: [role: string, text: string]; popup?: string }
+
+const escape = (text: string) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const ink = (role: string, text: string, extra = '') =>
+  `<span class="t${extra}" data-role="${role}" style="color:var(--${role})">${escape(text)}</span>`;
+const surface = (role: string, html: string, tag = 'span', extra = '') =>
+  `<${tag} class="b${extra}" data-role="${role}" style="background:var(--${role})">${html}</${tag}>`;
+const render = (runs: Run[]): string => runs.map(run => {
+  if (typeof run === 'string') return escape(run);
+  if (Array.isArray(run)) return ink(run[0], run[1]);
+  if ('surface' in run) return surface(run.surface, render(run.runs));
+  return `<span class="d" data-role="${run.underline}" style="--squiggle:var(--${run.underline})">${render(run.runs)}</span>`;
+}).join('');
+
+const kw = (t: string): Run => ['keyword', t];
+const p = (t: string): Run => ['punct', t];
+const lines: Line[] = [
+  { runs: [['comment', '// Tide tables for the bay, refreshed hourly.']] },
+  { runs: [kw('import'), ' ', p('{'), ' ', ['type', 'Tide'], ' ', p('}'), ' ', kw('from'), ' ', ['string', '"./tides"'], p(';')] },
+  { runs: [] },
+  { runs: [kw('export'), ' ', kw('class'), ' ', ['type', 'Harbor'], ' ', p('{')] },
+  { sign: 'git_add', surface: 'diff_add', runs: ['  ', ['field', '#tides'], ' ', ['operator', '='], ' ', kw('new'), ' ', ['special', 'Map'], p('<'), ['type', 'Date'], p(', '), ['type', 'Tide'], p('>();')] },
+  { sign: 'git_change', surface: 'diff_change', runs: ['  ', kw('readonly'), ' ', ['field', 'depth'], ' ', ['operator', '='], ' ', { surface: 'diff_text', runs: [['number', '12.5']] }, p(';')] },
+  { sign: 'git_delete', surface: 'diff_delete', number: 0, runs: ['  ', ['field', 'depth'], ' ', ['operator', '='], ' ', ['number', '12'], p(';')] },
+  { runs: [] },
+  { runs: ['  ', ['func', 'forecast'], p('('), ['param', 'day'], p(': '), ['type', 'Date'], p(', '), { underline: 'hint', runs: [['param', 'fresh']] }, ' ', ['operator', '='], ' ', ['constant', 'false'], p(') {')] },
+  { surface: 'bg_p2', popup: 'has(key: Date): boolean', runs: ['    ', kw('if'), ' ', p('('), ['operator', '!'], ['param', 'fresh'], ' ', ['operator', '&&'], ' ', ['builtin', 'this'], p('.'), ['field', '#tides'], p('.'), ['func', 'has'], p('('), { surface: 'search', runs: [['param', 'day']] }, p(')) {')] },
+  { runs: ['      ', ['builtin', 'return'], ' ', { surface: 'visual', runs: [['builtin', 'this'], p('.'), ['field', '#tides'], p('.'), ['func', 'get'], p('('), ['param', 'day'], p(')')] }, p(';')] },
+  { runs: ['    ', p('}')] },
+  { note: ['warn', "● 'url' is never read"], runs: ['    ', kw('const'), ' ', { underline: 'warn', runs: [['fg', 'url']] }, ' ', ['operator', '='], ' ', ['string', '`/tides?d='], ['special', '${'], ['param', 'day'], ['special', '}'], ['string', '`'], p(';')] },
+  { runs: ['    ', { underline: 'error', runs: [['builtin', 'throw']] }, ' ', kw('new'), ' ', ['special', 'Error'], p('('), ['string', '"offline"'], p(');')] },
+  { runs: ['  ', p('}')] },
+  { runs: [p('}')] },
+];
+
+let number = 0;
+const code = lines.map(line => {
+  const shown = line.number === 0 ? '' : String(++number);
+  const lineNumber = line.surface === 'bg_p2' ? ink('fg', shown, ' line-no') : ink('nontext', shown, ' line-no');
+  const sign = line.sign ? ink(line.sign, '▎', ' sign') : '<span class="sign"></span>';
+  const note = line.note ? ' ' + ink(line.note[0], line.note[1], ' note') : '';
+  const popup = line.popup ? surface('bg3', ink('fg', line.popup), 'span', ' popup') : '';
+  const body = `${sign}${lineNumber}<code>${render(line.runs)}${note}</code>${popup}`;
+  return line.surface ? surface(line.surface, body, 'div', ' a-line') : `<div class="a-line">${body}</div>`;
+}).join('');
+
+const problems = [
+  ['error', '✕', 13, 'Unhandled throw in forecast'],
+  ['warn', '▲', 12, "'url' is declared but never read"],
+  ['info', '●', 5, 'Tide tables refresh hourly'],
+  ['hint', '○', 8, "'fresh' can be inferred"],
+].map(([role, icon, line, text]) => `<div class="problem">${ink(role as string, `${icon} ${role}`)} ${ink('fg_dim', `harbor.ts:${line}`)} ${ink('fg', text as string)}</div>`).join('');
+
+const anatomy = [
+  surface('bg_m2', `${surface('bg_p1', ink('fg', 'harbor.ts'), 'span', ' tab')}<span class="tab">${ink('ui_special', 'tides.ts')}</span>`, 'div', ' a-tabs'),
+  surface('bg', code, 'div', ' a-code'),
+  surface('bg_m1', problems, 'div', ' a-problems'),
+  surface('bg0', `${ink('ui_special', 'NORMAL', ' mode')}${ink('fg_dim', 'harbor.ts')}<span class="spacer"></span>${ink('fg_dim', 'ts  9:22')}`, 'div', ' a-status'),
+].join('');
 ---
-<section class="palette" id="palette" aria-labelledby="palette-title">
+<section class="palette" id="palette" aria-labelledby="palette-title" style={style}>
   <div class="palette-heading">
     <h2 id="palette-title">Color palette</h2>
-    <div class="palette-variant-picker" role="group" aria-label="Palette variant" hidden>
-      {Object.entries(variants).map(([name, variant]) => <button type="button" data-palette-variant={name} aria-pressed={name === 'umi'}>{variant.name}</button>)}
-    </div>
   </div>
-  <p class="section-note">Select a swatch to copy its hex value. Contrast ratios use the editor background of the selected variant. <a href="https://github.com/karazuri/palette/blob/main/palette.json">Palette source</a></p>
-  <div class="swatch-groups" style={style}>
-    {groups.map(([title, keys]) => <section>
-      <h3>{title}</h3>
-      <div class="swatches">
-        {keys.map(role => {
-          const hex = colors[role].toUpperCase();
-          const ratio = contrast(hex, colors.bg).toFixed(1);
-          return <button class="swatch" type="button" data-role={role} title={roles[role]} aria-label={`Copy ${role} ${hex}, contrast ${ratio} to 1`} disabled>
-            <span class="chip" style={`background-color:${hex}`}></span>
-            <span class="meta">
-              <span class="role">{role}</span>
-              <code class="hex">{hex}</code>
-              <span class="swatch-readout" aria-hidden="true">
-                <span class="ratio">{ratio}:1</span>
-                <span class="copy-feedback">Copied</span>
+  <p class="section-note">Hover a swatch to see where it shows up, or select it to copy its hex value. Contrast ratios use the editor background of the selected variant. <a href="https://github.com/karazuri/palette/blob/main/palette.json">Palette source</a></p>
+  <div class="palette-body">
+    <figure class="anatomy b" data-role="border" aria-label="Editor showing every palette role">
+      <Fragment set:html={anatomy}/>
+    </figure>
+    <div class="swatch-groups">
+      {groups.map(([title, keys]) => <section>
+        <h3>{title}</h3>
+        <div class="swatches">
+          {keys.map(role => {
+            const hex = colors[role].toUpperCase();
+            const ratio = contrast(hex, colors.bg).toFixed(1);
+            return <button class="swatch" type="button" data-role={role} title={roles[role]} aria-label={`Copy ${role} ${hex}, contrast ${ratio} to 1`} disabled>
+              <span class="chip" style={`background-color:${hex}`}></span>
+              <span class="meta">
+                <span class="role">{role}</span>
+                <code class="hex">{hex}</code>
+                <span class="swatch-readout" aria-hidden="true">
+                  <span class="ratio">{ratio}:1</span>
+                  <span class="copy-feedback">Copied</span>
+                </span>
               </span>
-            </span>
-          </button>;
-        })}
-      </div>
-    </section>)}
+            </button>;
+          })}
+        </div>
+      </section>)}
+    </div>
   </div>
   <div class="swatch-status sr-only" role="status"></div>
 </section>

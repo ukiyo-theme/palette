@@ -4,7 +4,8 @@ export function initializePalette(variants) {
   const palette = document.getElementById('palette');
   const groups = palette.querySelector('.swatch-groups');
   const status = palette.querySelector('.swatch-status');
-  const variantButtons = [...palette.querySelectorAll('[data-palette-variant]')];
+  const anatomy = palette.querySelector('.anatomy');
+  const uses = [...anatomy.querySelectorAll('[data-role]'), anatomy];
   const motion = matchMedia('(prefers-reduced-motion: no-preference)');
   const swatches = [...groups.querySelectorAll('.swatches')].flatMap((group, index) =>
     [...group.querySelectorAll('.swatch')].map(button => ({
@@ -55,10 +56,30 @@ export function initializePalette(variants) {
     previous.remove();
   }
 
+  function spotlight(role) {
+    if (role === anatomy.dataset.spot) return;
+    if (role) anatomy.dataset.spot = role;
+    else delete anatomy.dataset.spot;
+    let surface = false;
+    for (const use of uses) {
+      const lit = use.dataset.role === role;
+      use.classList.toggle('is-lit', lit);
+      surface ||= lit && use.classList.contains('b');
+    }
+    anatomy.toggleAttribute('data-spot-surface', surface);
+    for (const { button } of swatches) button.toggleAttribute('data-lit', button.dataset.role === role);
+  }
+
   for (const swatch of swatches) {
     swatch.button.disabled = false;
     swatch.button.addEventListener('click', () => copySwatch(swatch));
+    swatch.button.addEventListener('pointerenter', () => spotlight(swatch.button.dataset.role));
+    swatch.button.addEventListener('focus', () => spotlight(swatch.button.dataset.role));
   }
+  groups.addEventListener('pointerleave', () => spotlight());
+  groups.addEventListener('focusout', event => { if (!groups.contains(event.relatedTarget)) spotlight(); });
+  anatomy.addEventListener('pointerover', event => spotlight(event.target.closest('.t, .d')?.dataset.role));
+  anatomy.addEventListener('pointerleave', () => spotlight());
   motion.addEventListener('change', event => {
     if (!event.matches) swatches.forEach(({ chip }) => clearWipe(chip));
   });
@@ -71,8 +92,7 @@ export function initializePalette(variants) {
     ++copyRequest;
     clearFeedback();
     const selected = variants[name];
-    paint(groups, selected);
-    for (const button of variantButtons) button.setAttribute('aria-pressed', String(button.dataset.paletteVariant === name));
+    paint(palette, selected);
 
     for (const swatch of swatches) {
       const role = swatch.button.dataset.role;

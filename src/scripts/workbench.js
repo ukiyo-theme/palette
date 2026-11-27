@@ -30,7 +30,8 @@ export function initializeWorkbench(variants, onVariant) {
   const panes = [...base.querySelectorAll('[data-pane]')];
   const editor = find('.editor-pane');
   const agent = find('.agent-pane');
-  const themeButtons = [...root.querySelectorAll('[data-variant]')];
+  // The header seals and the hero cards both pick the variant for the whole page.
+  const themeButtons = [...document.querySelectorAll('[data-variant]')];
   const viewButtons = [...root.querySelectorAll('[data-view]')];
   const compare = find('.compare-button');
   const comparePanel = find('#compare-options');
@@ -162,6 +163,11 @@ export function initializeWorkbench(variants, onVariant) {
   function selectVariant(name) {
     if (name !== variant) transition('palette', () => applyVariant(name));
     history.replaceState(null, '', `#${name}`);
+    try {
+      localStorage.setItem('karazuri-variant', name);
+    } catch {
+      // Without storage the choice still lasts for this visit through the URL hash.
+    }
   }
 
   for (const button of themeButtons) button.addEventListener('click', () => selectVariant(button.dataset.variant));
@@ -226,7 +232,8 @@ export function initializeWorkbench(variants, onVariant) {
   window.addEventListener('hashchange', applyVariantHash);
 
   inspectPrimary();
-  const initial = location.hash.slice(1);
+  // The inline head script already resolved the hash, the saved choice and the system appearance.
+  const initial = document.documentElement.dataset.theme;
   applyVariant(Object.hasOwn(variants, initial) ? initial : variant);
   for (const button of base.querySelectorAll('[data-role]')) button.disabled = false;
   root.classList.add('is-live');

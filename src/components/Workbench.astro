@@ -13,16 +13,10 @@ interface Props {
 }
 
 const { variants } = Astro.props;
-const descriptions: Record<string, string> = { umi: 'Cool dark', yoru: 'Warm dark', kami: 'Soft light' };
 const umi = variants.umi;
 const paletteStyle = Object.entries({ ...umi.colors, ...umi.preview }).map(([role, hex]) => `--${role}:${hex}`).join(';');
 ---
 <section class="workbench" id="preview" aria-label="Theme workbench" tabindex="-1">
-  <div class="variant-picker" role="group" aria-label="Theme variant" data-interactive>
-    {Object.entries(variants).map(([name, variant]) => <button type="button" data-variant={name} aria-pressed={name === 'umi'} style={`--edition-bg:${variant.colors.bg};--edition-fg:${variant.colors.fg};--edition-accent:${variant.colors[name === 'yoru' ? 'constant' : name === 'kami' ? 'keyword' : 'func']}`}>
-      <span class="variant-chip" aria-hidden="true"></span><strong>{variant.name}</strong><small>{descriptions[name]}</small>
-    </button>)}
-  </div>
   <div class="workbench-frame">
     <div class="workbench-toolbar" data-interactive>
       <div class="view-picker" role="group" aria-label="Preview surface">

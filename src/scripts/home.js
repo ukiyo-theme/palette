@@ -1,14 +1,22 @@
 import { initializePalette } from './palette.js';
+import { initializeSea } from './sea.js';
 import { initializeWorkbench } from './workbench.js';
 
 const variants = JSON.parse(document.getElementById('theme-data').textContent);
+const names = Object.keys(variants);
+const root = document.documentElement;
+const themeColor = document.querySelector('meta[name="theme-color"]');
 const updatePalette = initializePalette(variants);
+const sea = initializeSea(document.querySelector('.sea'), variants);
 const query = document.getElementById('tool-query');
 const toolGroups = [...document.querySelectorAll('.tool-group')].map(group => [group, [...group.querySelectorAll('.tool')]]);
 const downloadLinks = [...document.querySelectorAll('.download-links a[download]')];
 
 function setVariant(name) {
+  root.dataset.theme = name;
+  themeColor.content = variants[name].colors.bg0;
   updatePalette(name);
+  sea?.setVariant(name);
   for (const link of downloadLinks) {
     link.toggleAttribute('data-matches-variant', link.textContent.split(' + ').includes(variants[name].name));
   }
@@ -48,9 +56,12 @@ window.addEventListener('hashchange', () => openInstall(location.hash.slice(1)))
 openInstall(location.hash.slice(1));
 
 const selectVariant = initializeWorkbench(variants, setVariant);
-const palettePicker = document.querySelector('.palette-variant-picker');
-palettePicker.addEventListener('click', event => {
-  const button = event.target.closest('[data-palette-variant]');
-  if (button) selectVariant(button.dataset.paletteVariant);
+
+window.addEventListener('keydown', event => {
+  if (event.defaultPrevented || event.repeat || event.metaKey || event.ctrlKey || event.altKey) return;
+  if (event.target.closest?.('input, select, textarea, [contenteditable]')) return;
+  const index = Number(event.key) - 1;
+  if (names[index]) selectVariant(names[index]);
+  else if (event.key.toLowerCase() === 't') selectVariant(names[(names.indexOf(root.dataset.theme) + 1) % names.length]);
 });
-palettePicker.hidden = false;
+root.classList.add('theme-live');
