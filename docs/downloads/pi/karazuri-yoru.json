@@ -1,6 +1,6 @@
 {
   "$schema": "https://pi.dev/schemas/theme.schema.json",
-  "name": "ukiyo-yoru",
+  "name": "karazuri-yoru",
   "appearance": "dark",
   "colors": {
     "accent": "#8BA4C7",

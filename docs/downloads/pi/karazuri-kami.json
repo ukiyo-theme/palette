@@ -1,6 +1,6 @@
 {
   "$schema": "https://pi.dev/schemas/theme.schema.json",
-  "name": "ukiyo-kami",
+  "name": "karazuri-kami",
   "appearance": "light",
   "colors": {
     "accent": "#2B497A",

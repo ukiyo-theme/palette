@@ -1,12 +1,12 @@
-# Ukiyo palette
+# karazuri palette
 
-![Ukiyo: a moon over a curling wave, with the umi, yoru and kami variants](brand/banner.png)
+![karazuri: a moon over a curling wave, with the umi, yoru and kami variants](brand/banner.png)
 
-The source of truth for every Ukiyo port. All colors live in [`palette.json`](palette.json), and the ports are generated from it.
+The source of truth for every karazuri port. All colors live in [`palette.json`](palette.json), and the ports are generated from it.
 
-**[Preview and install Ukiyo](https://ukiyo-theme.github.io/palette/)**
+**[Preview and install karazuri](https://karazuri.github.io/palette/)**
 
-Ink for the floating world. Ukiyo brings the same three palettes to editors, coding agents, and terminals.
+Ink for the floating world. karazuri brings the same three palettes to editors, coding agents, and terminals.
 
 ## Variants
 
@@ -36,13 +36,13 @@ Follow the installation instructions in the port repository for your editor, ter
 
 | Port | Repo | Status |
 |---|---|---|
-| Neovim | [ukiyo-theme/nvim](https://github.com/ukiyo-theme/nvim) | Available |
-| VS Code, Cursor, VSCodium | [ukiyo-theme/vscode](https://github.com/ukiyo-theme/vscode) | VSIX |
-| Zed | [ukiyo-theme/zed](https://github.com/ukiyo-theme/zed) | Theme file or dev extension |
-| T3 Code | [ukiyo-theme/t3code](https://github.com/ukiyo-theme/t3code) | Theme files |
-| OpenCode, Codex CLI, Claude Code, Pi | [ukiyo-theme/extras](https://github.com/ukiyo-theme/extras#how-to-use) | Theme files |
-| JetBrains IDEs | [ukiyo-theme/extras](https://github.com/ukiyo-theme/extras#jetbrains-ides) | Installable plugin |
-| Ghostty, kitty, WezTerm, Alacritty, iTerm2, Windows Terminal, Helix, tmux, fzf, delta, bat, Sublime Text | [ukiyo-theme/extras](https://github.com/ukiyo-theme/extras#how-to-use) | Theme and config files |
+| Neovim | [karazuri/nvim](https://github.com/karazuri/nvim) | Available |
+| VS Code, Cursor, VSCodium | [karazuri/vscode](https://github.com/karazuri/vscode) | VSIX |
+| Zed | [karazuri/zed](https://github.com/karazuri/zed) | Theme file or dev extension |
+| T3 Code | [karazuri/t3code](https://github.com/karazuri/t3code) | Theme files |
+| OpenCode, Codex CLI, Claude Code, Pi | [karazuri/extras](https://github.com/karazuri/extras#how-to-use) | Theme files |
+| JetBrains IDEs | [karazuri/extras](https://github.com/karazuri/extras#jetbrains-ides) | Installable plugin |
+| Ghostty, kitty, WezTerm, Alacritty, iTerm2, Windows Terminal, Helix, tmux, fzf, delta, bat, Sublime Text | [karazuri/extras](https://github.com/karazuri/extras#how-to-use) | Theme and config files |
 
 ### Building a new port
 
@@ -78,7 +78,7 @@ Run `npm run dev` from this repository to preview the site at `/palette/`. The s
 
 ```sh
 cd ../vscode
-npx @vscode/vsce package --out ../palette/docs/downloads/ukiyo.vsix
+npx @vscode/vsce package --out ../palette/docs/downloads/karazuri.vsix
 ```
 
 ## Changing a color

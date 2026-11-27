@@ -1,7 +1,7 @@
 {
   "schemes": [
     {
-      "name": "Ukiyo Umi",
+      "name": "karazuri Umi",
       "background": "#1A1A22",
       "foreground": "#E2DCC5",
       "cursorColor": "#E2DCC5",
@@ -24,7 +24,7 @@
       "brightWhite": "#E2DCC5"
     },
     {
-      "name": "Ukiyo Yoru",
+      "name": "karazuri Yoru",
       "background": "#161514",
       "foreground": "#D2CDBF",
       "cursorColor": "#D2CDBF",
@@ -47,7 +47,7 @@
       "brightWhite": "#D2CDBF"
     },
     {
-      "name": "Ukiyo Kami",
+      "name": "karazuri Kami",
       "background": "#D2CCBC",
       "foreground": "#292830",
       "cursorColor": "#292830",

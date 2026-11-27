@@ -1,9 +1,9 @@
-"""Install instructions for the tools listed on the Ukiyo homepage."""
+"""Install instructions for the tools listed on the karazuri homepage."""
 
 from html import escape
 
 
-ORG = "https://github.com/ukiyo-theme"
+ORG = "https://github.com/karazuri"
 
 
 def variant_files(path):
@@ -14,11 +14,11 @@ def extras(anchor, name, scope, steps="", files=()):
     return (name, scope, f"{ORG}/extras#{anchor}", steps, files)
 
 
-VSIX = [("Download VSIX", "ukiyo.vsix")]
-VSIX_STEPS = "Run Extensions: Install from VSIX… from the Command Palette, then choose a Ukiyo variant."
+VSIX = [("Download VSIX", "karazuri.vsix")]
+VSIX_STEPS = "Run Extensions: Install from VSIX… from the Command Palette, then choose a karazuri variant."
 OPENCODE_FILES = [
-    ("1.x", variant_files("opencode/ukiyo-{}.json")),
-    ("2.x", variant_files("opencode/v2/ukiyo-{}.json")),
+    ("1.x", variant_files("opencode/karazuri-{}.json")),
+    ("2.x", variant_files("opencode/v2/karazuri-{}.json")),
 ]
 
 GROUPS = [
@@ -29,29 +29,29 @@ GROUPS = [
         ("VSCodium", "Editor, syntax, and workbench", f"{ORG}/vscode#how-to-use", VSIX_STEPS, VSIX),
         ("Zed", "Editor, syntax, and workbench", f"{ORG}/zed#how-to-use",
          "Copy the theme file to ~/.config/zed/themes/ on macOS or Linux. Restart Zed and open the theme selector.",
-         [("Download theme", "zed/ukiyo.json")]),
+         [("Download theme", "zed/karazuri.json")]),
         extras("jetbrains-ides", "JetBrains IDEs", "Editor, syntax, and IDE interface",
                "In IntelliJ Platform 2024.3 or later, open Settings → Plugins → Install Plugin from Disk…, select the JAR, and restart if prompted.",
-               [("Download plugin", "jetbrains/ukiyo.jar")]),
+               [("Download plugin", "jetbrains/karazuri.jar")]),
         extras("helix", "Helix", "Editor and syntax"),
         extras("sublime-text", "Sublime Text", "Editor color scheme"),
     ]),
     ("Agents", [
         ("T3 Code", "Interface and terminal", f"{ORG}/t3code#how-to-use",
          "Copy a theme file to ~/.t3/userdata/themes/ and select it in Settings. Both themes use Kami in light mode.",
-         [("Umi + Kami", "t3code/ukiyo.json"), ("Yoru + Kami", "t3code/ukiyo-yoru.json")]),
+         [("Umi + Kami", "t3code/karazuri.json"), ("Yoru + Kami", "t3code/karazuri-yoru.json")]),
         extras("opencode", "OpenCode", "Terminal UI, syntax, and diffs",
                "Check opencode --version and choose the matching file. Copy it to ~/.config/opencode/themes/, restart, and run /themes.",
                OPENCODE_FILES),
         extras("codex-cli", "Codex CLI", "Syntax and diffs",
                "Copy the file into the themes directory under CODEX_HOME (defaults to ~/.codex), then run /theme. Set the same variant in your terminal to match the rest of the session.",
-               variant_files("tmtheme/ukiyo-{}.tmTheme")),
+               variant_files("tmtheme/karazuri-{}.tmTheme")),
         extras("claude-code", "Claude Code", "Prompts, messages, and diffs",
                "Copy the file into ~/.claude/themes/ and choose it with /theme. Set your terminal to the same variant for the background.",
-               variant_files("claude-code/ukiyo-{}.json")),
+               variant_files("claude-code/karazuri-{}.json")),
         extras("pi", "Pi", "Messages, tools, syntax, and diffs",
                "Copy the file into ~/.pi/agent/themes/, restart or run /reload, then pick Theme in /settings. Your terminal supplies the session background.",
-               variant_files("pi/ukiyo-{}.json")),
+               variant_files("pi/karazuri-{}.json")),
     ]),
     ("Terminals & CLI", [
         extras("ghostty", "Ghostty", "Terminal scheme"),
@@ -60,8 +60,8 @@ GROUPS = [
         extras("alacritty", "Alacritty", "Terminal scheme"),
         extras("iterm2", "iTerm2", "Terminal scheme"),
         extras("windows-terminal", "Windows Terminal", "Terminal scheme",
-               r"Put ukiyo.json in the Ukiyo folder under %LOCALAPPDATA%\Microsoft\Windows Terminal\Fragments. Restart Windows Terminal and choose a Color scheme under a profile’s Appearance.",
-               [("Download schemes", "windows-terminal/ukiyo.json")]),
+               r"Put karazuri.json in the karazuri folder under %LOCALAPPDATA%\Microsoft\Windows Terminal\Fragments. Restart Windows Terminal and choose a Color scheme under a profile’s Appearance.",
+               [("Download schemes", "windows-terminal/karazuri.json")]),
         extras("tmux", "tmux", "Multiplexer interface"),
         extras("fzf", "fzf", "Finder interface"),
         extras("delta", "delta", "Git diff and syntax"),

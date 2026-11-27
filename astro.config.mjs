@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://ukiyo-theme.github.io',
+  site: 'https://karazuri.github.io',
   base: '/palette',
   build: { assets: 'site-assets', inlineStylesheets: 'always' },
   devToolbar: { enabled: false },

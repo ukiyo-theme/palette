@@ -1,6 +1,6 @@
 {
   "$schema": "https://pi.dev/schemas/theme.schema.json",
-  "name": "ukiyo-umi",
+  "name": "karazuri-umi",
   "appearance": "dark",
   "colors": {
     "accent": "#82A8E8",

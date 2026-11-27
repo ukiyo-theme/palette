@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace">
-  <title>Ukiyo</title>
+  <title>karazuri</title>
   <rect width="1280" height="640" fill="#14141B"/>
   <g transform="translate(96 128) scale(.75)">
     <defs>
@@ -53,8 +53,8 @@
   </g>
 
   </g>
-  <text x="560" y="250" fill="#E2DCC5" font-size="112" font-weight="700" letter-spacing="-2">ukiyo</text>
-  <text x="566" y="300" fill="#C4A8F5" font-size="28"><tspan font-family="Hiragino Mincho ProN, Noto Serif JP, serif">浮世</tspan> · the floating world</text>
+  <text x="560" y="250" fill="#E2DCC5" font-size="112" font-weight="700" letter-spacing="-2">karazuri</text>
+  <text x="566" y="300" fill="#C4A8F5" font-size="28"><tspan font-family="Hiragino Mincho ProN, Noto Serif JP, serif">空摺</tspan> · blind embossing</text>
   <text x="566" y="360" fill="#C8C093" font-size="24">Readable colors for editors and terminals.</text>
   <g transform="translate(560 430)"><rect width="200" height="96" rx="16" fill="#1A1A22" stroke="#54546D" stroke-width="2"/><circle cx="30" cy="34" r="10" fill="#C4A8F5"/><circle cx="58" cy="34" r="10" fill="#82A8E8"/><circle cx="86" cy="34" r="10" fill="#A3C97A"/><circle cx="114" cy="34" r="10" fill="#7FC4B4"/><circle cx="142" cy="34" r="10" fill="#F2A36B"/><text x="20" y="76" fill="#E2DCC5" font-size="22">umi</text></g><g transform="translate(780 430)"><rect width="200" height="96" rx="16" fill="#161514" stroke="#54546D" stroke-width="2"/><circle cx="30" cy="34" r="10" fill="#B8A3D6"/><circle cx="58" cy="34" r="10" fill="#8BA4C7"/><circle cx="86" cy="34" r="10" fill="#A3B58A"/><circle cx="114" cy="34" r="10" fill="#8FB8AA"/><circle cx="142" cy="34" r="10" fill="#D9A273"/><text x="20" y="76" fill="#D2CDBF" font-size="22">yoru</text></g><g transform="translate(1000 430)"><rect width="200" height="96" rx="16" fill="#D2CCBC" stroke="#54546D" stroke-width="2"/><circle cx="30" cy="34" r="10" fill="#523B83"/><circle cx="58" cy="34" r="10" fill="#2B497A"/><circle cx="86" cy="34" r="10" fill="#36561D"/><circle cx="114" cy="34" r="10" fill="#22564D"/><circle cx="142" cy="34" r="10" fill="#7B4116"/><text x="20" y="76" fill="#292830" font-size="22">kami</text></g>
 </svg>

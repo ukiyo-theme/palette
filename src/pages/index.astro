@@ -18,16 +18,16 @@ const tokens = Object.entries({...colors, ...preview}).map(([role, value]) => `-
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Ukiyo | Ink for the floating world</title>
-  <meta name="description" content="Explore Ukiyo, a color theme for editors, coding agents, and terminals. Try three variants and find your install."/>
-  <meta property="og:image" content="https://raw.githubusercontent.com/ukiyo-theme/palette/main/brand/banner.png"/>
+  <title>karazuri | Ink for the floating world</title>
+  <meta name="description" content="Explore karazuri, a color theme for editors, coding agents, and terminals. Try three variants and find your install."/>
+  <meta property="og:image" content="https://raw.githubusercontent.com/karazuri/palette/main/brand/banner.png"/>
   <link rel="icon" href={'data:image/svg+xml,' + encodeURIComponent(mark)}/>
 </head>
 <body>
   <a class="skip-link" href="#preview">Skip to preview</a>
   <header class="topbar">
-    <a class="wordmark" href="#home" aria-label="Ukiyo home">Ukiyo <span lang="ja">浮世</span></a>
-    <nav aria-label="Main navigation"><a href="#tools">Install</a><a href="https://github.com/ukiyo-theme/palette">GitHub ↗</a></nav>
+    <a class="wordmark" href="#home" aria-label="karazuri home">karazuri <span lang="ja">空摺</span></a>
+    <nav aria-label="Main navigation"><a href="#tools">Install</a><a href="https://github.com/karazuri/palette">GitHub ↗</a></nav>
   </header>
   <main id="home">
     <div class="hero">
@@ -54,7 +54,7 @@ const tokens = Object.entries({...colors, ...preview}).map(([role, value]) => `-
     <section class="comparison" id="comparison" aria-label="Compare the same code in all three variants" hidden></section>
     <Directory {directory}/>
   </main>
-  <footer class="site-footer"><span class="wordmark">Ukiyo <span lang="ja">浮世</span></span><a href="https://github.com/ukiyo-theme/palette/blob/main/LICENSE">MIT license</a></footer>
+  <footer class="site-footer"><span class="wordmark">karazuri <span lang="ja">空摺</span></span><a href="https://github.com/karazuri/palette/blob/main/LICENSE">MIT license</a></footer>
   <div id="toast" role="status"></div>
   <script type="application/json" id="theme-data" set:html={JSON.stringify(data).replace(/</g, '\\u003c')}></script>
   <script>import '../scripts/home.js';</script>

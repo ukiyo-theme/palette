@@ -72,8 +72,8 @@ def editor_scheme(name, c, dark):
 def plugin_resources(variants, author, title):
     plugin = ET.Element("idea-plugin")
     for key, value in {
-        "id": "theme.ukiyo.jetbrains", "name": "Ukiyo", "version": "0.1.0", "vendor": author,
-        "description": "Ukiyo color themes in Umi, Yoru, and Kami.",
+        "id": "theme.karazuri.jetbrains", "name": "karazuri", "version": "0.1.0", "vendor": author,
+        "description": "karazuri color themes in Umi, Yoru, and Kami.",
         "depends": "com.intellij.modules.platform",
     }.items():
         ET.SubElement(plugin, key).text = value
@@ -85,8 +85,8 @@ def plugin_resources(variants, author, title):
     for name, variant in variants.items():
         c = variant["colors"]
         dark = variant["appearance"] == "dark"
-        path = f"themes/ukiyo-{name}"
-        ET.SubElement(extensions, "themeProvider", id=f"theme.ukiyo.jetbrains.{name}",
+        path = f"themes/karazuri-{name}"
+        ET.SubElement(extensions, "themeProvider", id=f"theme.karazuri.jetbrains.{name}",
                       path=f"/{path}.theme.json")
         theme = {
             "name": title(name), "dark": dark, "author": author,
