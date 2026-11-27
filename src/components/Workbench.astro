@@ -1,0 +1,75 @@
+---
+import Specimen from './Specimen.astro';
+
+interface Variant {
+  name: string;
+  appearance: 'dark' | 'light';
+  colors: Record<string, string>;
+  preview: Record<string, string>;
+}
+
+interface Props {
+  variants: Record<string, Variant>;
+}
+
+const { variants } = Astro.props;
+const descriptions: Record<string, string> = { umi: 'Cool dark', yoru: 'Warm dark', kami: 'Soft light' };
+const umi = variants.umi;
+const paletteStyle = Object.entries({ ...umi.colors, ...umi.preview }).map(([role, hex]) => `--${role}:${hex}`).join(';');
+---
+<section class="workbench" id="preview" aria-label="Theme workbench" tabindex="-1">
+  <div class="variant-picker" role="group" aria-label="Theme variant" data-interactive>
+    {Object.entries(variants).map(([name, variant]) => <button type="button" data-variant={name} aria-pressed={name === 'umi'} style={`--edition-bg:${variant.colors.bg};--edition-fg:${variant.colors.fg};--edition-accent:${variant.colors[name === 'yoru' ? 'constant' : name === 'kami' ? 'keyword' : 'func']}`}>
+      <span class="variant-chip" aria-hidden="true"></span><strong>{variant.name}</strong><small>{descriptions[name]}</small>
+    </button>)}
+  </div>
+  <div class="workbench-frame">
+    <div class="workbench-toolbar" data-interactive>
+      <div class="view-picker" role="group" aria-label="Preview surface">
+        <button type="button" data-view="editor" aria-pressed="true">Editor</button>
+        <button type="button" data-view="agent" aria-pressed="false">Agent diff</button>
+        <button type="button" data-view="terminal" aria-pressed="false">Terminal</button>
+      </div>
+      <button type="button" class="compare-button" aria-pressed="false" aria-controls="compare-options"><span aria-hidden="true">◧</span> Compare</button>
+    </div>
+
+    <div id="compare-options" class="disclosure" inert>
+      <div class="disclosure-content">
+        <div class="compare-options">
+          <span class="compare-left">Umi</span>
+          <span class="compare-hint">Drag to compare</span>
+          <select aria-label="Comparison variant"></select>
+        </div>
+      </div>
+    </div>
+
+    <div class="workbench-stage">
+      <div class="preview-surface preview-base" style={paletteStyle}>
+        <div class="preview-primary"><Specimen scene="editor"/></div>
+        <div class="preview-shelf"><Specimen scene="agent"/><Specimen scene="terminal"/></div>
+      </div>
+      <div class="preview-surface preview-overlay" aria-hidden="true" inert></div>
+      <div class="compare-divider" aria-hidden="true"><span>‹ ›</span></div>
+      <input class="compare-range" type="range" min="0" max="100" value="52" aria-label="Comparison divider" aria-valuetext="52% left variant" hidden/>
+    </div>
+
+    <div class="workbench-footer" data-interactive>
+      <div class="inspector" role="status">
+        <span class="inspector-chip" aria-hidden="true"></span>
+        <span class="inspector-role">Function</span>
+        <code class="inspector-hex">{umi.colors.func.toUpperCase()}</code>
+        <span class="inspector-ratio" title="Text contrast against this surface"></span>
+      </div>
+      <button class="quick-install-button" type="button" aria-expanded="false" aria-controls="quick-install"><span>Install Umi</span><span class="chevron" aria-hidden="true">▾</span></button>
+    </div>
+
+    <section id="quick-install" class="disclosure" aria-labelledby="quick-install-title" inert>
+      <div class="disclosure-content">
+        <div class="quick-install">
+          <h2 id="quick-install-title">Install Umi</h2>
+          <div class="quick-install-links"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>

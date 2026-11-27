@@ -1,20 +1,18 @@
 ---
 import { execFileSync } from 'node:child_process';
-import '@fontsource/cormorant-garamond/latin-600.css';
-import '@fontsource/ibm-plex-mono/latin-400.css';
+import '@fontsource-variable/bricolage-grotesque/wght.css';
+import '@fontsource/jetbrains-mono/latin-400.css';
 import '../styles/site.css';
-import Specimen from '../components/Specimen.astro';
 import Directory from '../components/Directory.astro';
+import Palette from '../components/Palette.astro';
 import Seascape from '../components/Seascape.astro';
+import Workbench from '../components/Workbench.astro';
 import mark from '../../brand/mark.svg?raw';
 
-const {directory, ...data} = JSON.parse(execFileSync('python3', ["scripts/site_data.py"], { encoding: 'utf8' }));
-const variants = Object.keys(data.variants);
-const { colors, preview } = data.variants.umi;
-const tokens = Object.entries({...colors, ...preview}).map(([role, value]) => `--${role}:${value}`).join(';');
+const { directory, ...data } = JSON.parse(execFileSync('python3', ['scripts/site_data.py'], { encoding: 'utf8' }));
 ---
 <!doctype html>
-<html lang="en" style={tokens}>
+<html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -23,40 +21,26 @@ const tokens = Object.entries({...colors, ...preview}).map(([role, value]) => `-
   <meta property="og:image" content="https://raw.githubusercontent.com/karazuri/palette/main/brand/banner.png"/>
   <link rel="icon" href={'data:image/svg+xml,' + encodeURIComponent(mark)}/>
 </head>
-<body>
+<body id="home">
   <a class="skip-link" href="#preview">Skip to preview</a>
-  <header class="topbar">
-    <a class="wordmark" href="#home" aria-label="karazuri home">karazuri <span lang="ja">空摺</span></a>
-    <nav aria-label="Main navigation"><a href="#tools">Install</a><a href="https://github.com/karazuri/palette">GitHub ↗</a></nav>
+  <header class="topbar page-width">
+    <a class="signature" href="#home" aria-label="Karazuri home"><span class="seal" aria-hidden="true"></span><span lang="ja">空摺</span></a>
+    <nav aria-label="Main navigation"><a href="#tools">Install</a><a href="https://github.com/karazuri/palette">GitHub <span aria-hidden="true">↗</span></a></nav>
   </header>
-  <main id="home">
-    <div class="hero">
-      <section class="print" aria-labelledby="headline">
-        <div class="print-copy">
-          <h1 id="headline">Ink for the<br/>floating world.</h1>
-          <p>A color theme for editors, coding agents, and terminals.</p>
-          <a class="install" href="#tools">Find your tool <span aria-hidden="true">↓</span></a>
-        </div>
-        <Seascape/>
-      </section>
-      <section class="studio" id="preview" aria-labelledby="preview-title">
-        <h2 id="preview-title">Theme preview</h2>
-        <div id="themes" class="theme-strip" role="group" aria-label="Theme variant">
-          {variants.map(name => <button class="edition" type="button" data-theme={name} aria-pressed={name==='umi'}>
-            <i aria-hidden="true" style={`background:${data.variants[name].colors.bg};border-color:${data.variants[name].colors.func}`}></i>
-            {data.variants[name].name}
-          </button>)}
-        </div>
-        <Specimen/>
-        <button type="button" class="plain-button" id="compare-toggle" aria-controls="comparison" aria-expanded="false" hidden>Compare variants</button>
-      </section>
+  <main>
+    <section class="hero page-width" aria-labelledby="headline">
+      <Seascape/>
+      <h1 id="headline">karazuri</h1>
+      <p>A color theme for editors, coding agents, and terminals.</p>
+    </section>
+    <div class="page-width">
+      <Workbench variants={data.variants}/>
+      <Directory {directory}/>
+      <Palette variants={data.variants} groups={data.groups} roles={data.roles}/>
     </div>
-    <section class="comparison" id="comparison" aria-label="Compare the same code in all three variants" hidden></section>
-    <Directory {directory}/>
   </main>
-  <footer class="site-footer"><span class="wordmark">karazuri <span lang="ja">空摺</span></span><a href="https://github.com/karazuri/palette/blob/main/LICENSE">MIT license</a></footer>
-  <div id="toast" role="status"></div>
-  <script type="application/json" id="theme-data" set:html={JSON.stringify(data).replace(/</g, '\\u003c')}></script>
+  <footer class="site-footer page-width"><span>karazuri</span><a href="https://github.com/karazuri/palette/blob/main/LICENSE">MIT license</a></footer>
+  <script type="application/json" id="theme-data" set:html={JSON.stringify(data.variants).replace(/</g, '\\u003c')}></script>
   <script>import '../scripts/home.js';</script>
 </body>
 </html>

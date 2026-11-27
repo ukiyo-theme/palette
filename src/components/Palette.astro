@@ -1,0 +1,45 @@
+---
+import { contrast } from '../scripts/colors.js';
+
+interface Props {
+  variants: Record<string, { name: string; colors: Record<string, string> }>;
+  groups: [string, string[]][];
+  roles: Record<string, string>;
+}
+
+const { variants, groups, roles } = Astro.props;
+const { colors } = variants.umi;
+const style = ['bg', 'fg', 'fg_dim', 'border', 'func'].map(role => `--${role}:${colors[role]}`).join(';');
+---
+<section class="palette" id="palette" aria-labelledby="palette-title">
+  <div class="palette-heading">
+    <h2 id="palette-title">Color palette</h2>
+    <div class="palette-variant-picker" role="group" aria-label="Palette variant" hidden>
+      {Object.entries(variants).map(([name, variant]) => <button type="button" data-palette-variant={name} aria-pressed={name === 'umi'}>{variant.name}</button>)}
+    </div>
+  </div>
+  <p class="section-note">Select a swatch to copy its hex value. Contrast ratios use the editor background of the selected variant. <a href="https://github.com/karazuri/palette/blob/main/palette.json">Palette source</a></p>
+  <div class="swatch-groups" style={style}>
+    {groups.map(([title, keys]) => <section>
+      <h3>{title}</h3>
+      <div class="swatches">
+        {keys.map(role => {
+          const hex = colors[role].toUpperCase();
+          const ratio = contrast(hex, colors.bg).toFixed(1);
+          return <button class="swatch" type="button" data-role={role} title={roles[role]} aria-label={`Copy ${role} ${hex}, contrast ${ratio} to 1`} disabled>
+            <span class="chip" style={`background-color:${hex}`}></span>
+            <span class="meta">
+              <span class="role">{role}</span>
+              <code class="hex">{hex}</code>
+              <span class="swatch-readout" aria-hidden="true">
+                <span class="ratio">{ratio}:1</span>
+                <span class="copy-feedback">Copied</span>
+              </span>
+            </span>
+          </button>;
+        })}
+      </div>
+    </section>)}
+  </div>
+  <div class="swatch-status sr-only" role="status"></div>
+</section>
