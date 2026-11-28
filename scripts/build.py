@@ -8,6 +8,7 @@ Targets:
   vscode   themes/*.json for karazuri/vscode
   zed      themes/karazuri.json for karazuri/zed
   t3code   themes/*.json for karazuri/t3code
+  zen      chrome.css, preferences.json and userChrome/*.css for karazuri/zen
   extras   terminal and CLI themes for karazuri/extras
   preview  assets/*.svg previews and theme downloads
 
@@ -759,6 +760,266 @@ def build_t3code(palette):
     return files
 
 
+# Zen Browser -------------------------------------------------------------
+
+# The mod's name in the Zen Mods store. Zen exposes dropdown preferences as
+# attributes on a hidden element whose id is "theme-" + this name.
+ZEN_MOD = "karazuri"
+ZEN_MOD_ID = f"theme-{ZEN_MOD}"
+ZEN_VERSION = "1.0.0"
+ZEN_DESCRIPTION = "Ink for the floating world. The karazuri palette for Zen: Umi, Yoru and Kami."
+
+# Zen's window scheme preference: 0 dark, 1 light, 2 follow the system.
+ZEN_DARK = ['-moz-pref("zen.view.window.scheme", 0)',
+            '-moz-pref("zen.view.window.scheme", 2) and (-moz-system-dark-theme)']
+ZEN_LIGHT = ['-moz-pref("zen.view.window.scheme", 1)',
+             '-moz-pref("zen.view.window.scheme", 2) and (not (-moz-system-dark-theme))']
+
+# userChrome.css builds for people who don't use Zen Mods: (file, dark variant, light variant).
+ZEN_USERCHROME = [
+    ("karazuri.css", "umi", "kami"),
+    ("karazuri-yoru.css", "yoru", "kami"),
+    ("karazuri-umi.css", "umi", "umi"),
+    ("karazuri-kami.css", "kami", "kami"),
+]
+
+
+def css_block(selector, declarations, indent=""):
+    body = "".join(f"{indent}  {name}: {value};\n" for name, value in declarations)
+    return f"{indent}{selector} {{\n{body}{indent}}}\n"
+
+
+def zen_tokens(c):
+    """Every palette role as a --karazuri-* variable, plus the accent."""
+    tokens = [(f"--karazuri-{role.replace('_', '-')}", color) for role, color in c.items()]
+    return tokens + [("--karazuri-accent", c["func"])]
+
+
+def zen_scheme(dark):
+    """Pin the color scheme of the chrome (not web pages) to the variant."""
+    scheme = "dark" if dark else "light"
+    return f"""  --toolbar-color-scheme: {scheme} !important;
+  &, & #browser, & panel, & menupopup, & .zen-browser-generic-background,
+  & #urlbar[breakout-extend], & #zen-toast-container {{
+    color-scheme: {scheme} !important;
+  }}
+"""
+
+
+def zen_variant(selector, name, variant, media=None):
+    """Tokens and color scheme for one variant, optionally inside media queries."""
+    body = "".join(f"  {k}: {v};\n" for k, v in zen_tokens(variant["colors"]))
+    rule = f"{selector} {{\n  /* {name} */\n{body}{zen_scheme(variant['appearance'] == 'dark')}}}\n"
+    if not media:
+        return rule
+    indented = "".join(f"  {line}" if line.strip() else line for line in rule.splitlines(True))
+    return f"@media {', '.join(media)} {{\n{indented}}}\n"
+
+
+def zen_select(palette, mod, dark="umi", light="kami"):
+    """The variant selection: a dropdown in the mod, a fixed pair in userChrome.css."""
+    v = palette["variants"]
+    # The dark variant is the fallback; the light one applies when Zen is light.
+    out = [zen_variant(":root", dark, v[dark])]
+    if light != dark:
+        out.append(zen_variant(":root", light, v[light], ZEN_LIGHT))
+    if mod:
+        out.append("\n/* Variant preference. Auto follows Zen's light/dark setting. */\n")
+        yoru_auto = f':root:has(#{ZEN_MOD_ID}[karazuri-auto-dark="yoru"])'
+        out.append(zen_variant(yoru_auto, "yoru", v["yoru"], ZEN_DARK))
+        for name in v:
+            out.append(zen_variant(f':root:has(#{ZEN_MOD_ID}[karazuri-variant="{name}"])', name, v[name]))
+    return "".join(out)
+
+
+ZEN_UI = """
+/* Zen's own colors, mapped to the palette ---------------------------------- */
+
+:root {
+  --zen-branding-bg: var(--karazuri-bg0) !important;
+  --zen-branding-bg-reverse: var(--karazuri-fg) !important;
+
+  --zen-colors-primary: color-mix(in srgb, var(--karazuri-accent) 30%, var(--karazuri-bg3)) !important;
+  --zen-colors-secondary: color-mix(in srgb, var(--karazuri-accent) 15%, var(--karazuri-bg-p2)) !important;
+  --zen-colors-tertiary: var(--karazuri-bg) !important;
+  --zen-colors-hover-bg: var(--karazuri-bg-p2) !important;
+  --zen-colors-primary-foreground: var(--karazuri-fg) !important;
+  --zen-colors-border: var(--karazuri-bg3) !important;
+  --zen-colors-input-bg: var(--karazuri-bg-m1) !important;
+  --zen-input-border-color: var(--karazuri-bg3) !important;
+
+  --zen-dialog-background: var(--karazuri-bg-p1) !important;
+  --zen-urlbar-background: var(--karazuri-bg-p1) !important;
+  --zen-sidebar-notification-bg: var(--karazuri-bg-p1) !important;
+
+  --arrowpanel-background: var(--karazuri-bg-p1) !important;
+  --arrowpanel-color: var(--karazuri-fg) !important;
+  --arrowpanel-border-color: var(--karazuri-bg3) !important;
+  --panel-separator-color: var(--karazuri-bg3) !important;
+  --menu-background-color: var(--karazuri-bg-p1) !important;
+  --menu-color: var(--karazuri-fg) !important;
+  --menuitem-hover-background-color: var(--karazuri-bg3) !important;
+  --menu-border-color: var(--karazuri-bg3) !important;
+
+  --toolbar-field-background-color: var(--karazuri-bg-m1) !important;
+  --toolbar-field-focus-background-color: var(--karazuri-bg-p1) !important;
+  --toolbar-field-color: var(--karazuri-fg) !important;
+  --toolbar-field-focus-color: var(--karazuri-fg) !important;
+  --toolbarbutton-background-color-hover: color-mix(in srgb, var(--karazuri-fg) 8%, transparent) !important;
+  --toolbarbutton-background-color-active: color-mix(in srgb, var(--karazuri-fg) 12%, transparent) !important;
+  --zen-toolbar-element-bg: var(--karazuri-bg-p1) !important;
+  --zen-toolbar-element-bg-hover: var(--karazuri-bg-p2) !important;
+
+  --in-content-page-background: var(--karazuri-bg) !important;
+  --in-content-accent-color: var(--karazuri-accent) !important;
+  --in-content-primary-button-background: var(--karazuri-accent) !important;
+  --in-content-primary-button-background-hover: color-mix(in srgb, var(--karazuri-accent) 88%, var(--karazuri-fg)) !important;
+  --in-content-primary-button-background-active: color-mix(in srgb, var(--karazuri-accent) 76%, var(--karazuri-fg)) !important;
+  --in-content-primary-button-text-color: var(--karazuri-bg0) !important;
+  --focus-outline-color: var(--karazuri-accent) !important;
+  --link-color: var(--karazuri-func) !important;
+  --link-color-hover: var(--karazuri-special) !important;
+
+  --tab-selected-textcolor: var(--karazuri-fg) !important;
+  --tab-text-color-selected: var(--karazuri-fg) !important;
+  --tab-background-color-hover: var(--karazuri-bg-p2) !important;
+  --tab-hover-background-color: var(--karazuri-bg-p2) !important;
+  --attention-dot-color: var(--karazuri-warn) !important;
+  --tab-loading-fill: var(--karazuri-accent) !important;
+}
+
+/* Selected tab. Zen sets this on the workspace element with !important. */
+#main-window zen-workspace,
+#main-window .zen-browser-generic-background,
+#main-window #zen-essentials {
+  --tab-background-color-selected: var(--karazuri-visual) !important;
+  --tab-box-shadow-selected: none !important;
+}
+
+/* Floating URL bar and its results. */
+#main-window #urlbar .urlbar-background {
+  --zen-urlbar-background-base: var(--karazuri-bg-p1) !important;
+  --zen-urlbar-background-transparent: color-mix(in srgb, var(--karazuri-bg-p1) 94%, transparent) !important;
+  outline-color: var(--karazuri-bg3) !important;
+}
+#main-window #urlbar {
+  --urlbarView-highlight-background: var(--karazuri-visual);
+  --urlbarView-highlight-color: var(--karazuri-fg);
+  --urlbarView-hover-background: var(--karazuri-bg-p2);
+  --urlbarView-separator-color: var(--karazuri-bg3);
+  --urlbarView-action-color: var(--karazuri-fg-dim);
+  --urlbarView-url-color: var(--karazuri-func);
+}
+#main-window .urlbarView-title-separator::before,
+#main-window .urlbarView-secondary {
+  color: var(--karazuri-fg-dim) !important;
+}
+
+::selection {
+  background-color: var(--karazuri-visual);
+  color: var(--karazuri-fg);
+}
+
+/* Workspace background -------------------------------------------------------
+   Zen paints each space's gradient from JavaScript as inline styles. These
+   override it with flat karazuri ink unless "Keep workspace gradients" is on. */
+
+@media not -moz-pref("karazuri.keep-gradient") {
+  :root {
+    --zen-primary-color: var(--karazuri-accent) !important;
+    --toolbox-textcolor: var(--karazuri-fg) !important;
+    --toolbar-color: var(--karazuri-fg) !important;
+    --toolbar-text-color: var(--karazuri-fg) !important;
+    --toolbox-textcolor-inactive: var(--karazuri-fg-dim) !important;
+  }
+
+  #main-window #zen-browser-background,
+  #main-window #zen-toolbar-background {
+    --zen-main-browser-background: var(--karazuri-bg0) !important;
+    --zen-main-browser-background-toolbar: var(--karazuri-bg0) !important;
+    --zen-main-browser-background-old: var(--karazuri-bg0) !important;
+    --zen-main-browser-background-toolbar-old: var(--karazuri-bg0) !important;
+  }
+
+  #main-window .zen-browser-grain {
+    display: none !important;
+  }
+}
+"""
+
+
+def zen_css(palette, mod, dark="umi", light="kami"):
+    if mod:
+        intro = ("karazuri for Zen Browser, as a Zen Mod. Choose the variant in\n"
+                 "   Settings → Zen Mods → karazuri.")
+    elif dark == light:
+        intro = (f"karazuri {dark.capitalize()} for Zen Browser, for userChrome.css.")
+    else:
+        intro = (f"karazuri for Zen Browser, for userChrome.css: {dark.capitalize()} when Zen is dark,\n"
+                 f"   {light.capitalize()} when Zen is light.")
+    return (f"/* {intro}\n   {HEADER}\n   https://github.com/karazuri/zen */\n\n"
+            "/* Variant tokens: every palette role as --karazuri-<role>. --------------- */\n\n"
+            + zen_select(palette, mod, dark, light) + ZEN_UI)
+
+
+def zen_preferences():
+    return [
+        {
+            "property": "karazuri.variant",
+            "label": "Variant",
+            "type": "dropdown",
+            "placeholder": "Auto: follow Zen's light/dark setting",
+            "defaultValue": "auto",
+            "options": [
+                {"label": "Auto: follow Zen's light/dark setting", "value": "auto"},
+                {"label": "Umi (sea): dark, ink blue", "value": "umi"},
+                {"label": "Yoru (night): darker and warmer", "value": "yoru"},
+                {"label": "Kami (paper): light", "value": "kami"},
+            ],
+        },
+        {
+            "property": "karazuri.auto-dark",
+            "label": "Dark variant used by Auto",
+            "type": "dropdown",
+            "placeholder": "Umi",
+            "defaultValue": "umi",
+            "options": [
+                {"label": "Umi", "value": "umi"},
+                {"label": "Yoru", "value": "yoru"},
+            ],
+        },
+        {
+            "property": "karazuri.keep-gradient",
+            "label": "Keep workspace gradients instead of flat karazuri ink",
+            "type": "checkbox",
+            "defaultValue": False,
+        },
+    ]
+
+
+def build_zen(palette):
+    files = {
+        "chrome.css": zen_css(palette, mod=True),
+        "preferences.json": json_text(zen_preferences()),
+        "theme.json": json_text({
+            "id": ZEN_MOD,
+            "name": ZEN_MOD,
+            "description": ZEN_DESCRIPTION,
+            "homepage": "https://github.com/karazuri/zen",
+            "style": "https://raw.githubusercontent.com/karazuri/zen/main/chrome.css",
+            "readme": "https://raw.githubusercontent.com/karazuri/zen/main/README.md",
+            "preferences": "https://raw.githubusercontent.com/karazuri/zen/main/preferences.json",
+            "image": "https://raw.githubusercontent.com/karazuri/palette/main/brand/banner.png",
+            "author": AUTHOR,
+            "version": ZEN_VERSION,
+            "tags": ["color-scheme", "dark", "light"],
+        }),
+    }
+    for name, dark, light in ZEN_USERCHROME:
+        files[f"userChrome/{name}"] = zen_css(palette, mod=False, dark=dark, light=light)
+    return files
+
+
 # Extras: terminals and command-line tools --------------------------------
 
 def each_variant(palette):
@@ -1328,6 +1589,7 @@ def build_preview(palette):
         **build_jetbrains(palette),
         **{f"zed/{Path(path).name}": data for path, data in build_zed(palette).items()},
         **{f"t3code/{Path(path).name}": data for path, data in build_t3code(palette).items()},
+        **{f"zen/{Path(path).name}": data for path, data in build_zen(palette).items() if path.startswith("userChrome/")},
     }
     files.update({f"docs/downloads/{path}": data for path, data in downloads.items()})
     return files
@@ -1338,6 +1600,7 @@ TARGETS = {
     "vscode": build_vscode,
     "zed": build_zed,
     "t3code": build_t3code,
+    "zen": build_zen,
     "extras": build_extras,
     "preview": build_preview,
 }
