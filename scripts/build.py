@@ -1006,13 +1006,15 @@ def build_zen(palette):
             "name": ZEN_MOD,
             "description": ZEN_DESCRIPTION,
             "homepage": "https://github.com/karazuri/zen",
-            "style": "https://raw.githubusercontent.com/karazuri/zen/main/chrome.css",
+            # Sine reads style and preferences relative to the repository root.
+            "style": {"chrome": "chrome.css"},
+            "preferences": "preferences.json",
             "readme": "https://raw.githubusercontent.com/karazuri/zen/main/README.md",
-            "preferences": "https://raw.githubusercontent.com/karazuri/zen/main/preferences.json",
-            "image": "https://raw.githubusercontent.com/karazuri/palette/main/brand/banner.png",
+            "image": "https://raw.githubusercontent.com/karazuri/zen/main/images/karazuri.png",
             "author": AUTHOR,
             "version": ZEN_VERSION,
-            "tags": ["color-scheme", "dark", "light"],
+            "tags": ["color scheme", "theme", "dark", "light", "karazuri"],
+            "fork": ["zen"],
         }),
     }
     for name, dark, light in ZEN_USERCHROME:
