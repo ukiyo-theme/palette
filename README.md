@@ -6,7 +6,7 @@ The source of truth for every karazuri port. All colors live in [`palette.json`]
 
 **[Preview and install karazuri](https://karazuri.github.io/palette/)**
 
-Ink for the floating world. karazuri brings the same three palettes to editors, coding agents, and terminals.
+Ink for the floating world. karazuri brings the same three palettes to editors, coding agents, terminals, and the browser.
 
 ## Variants
 
@@ -40,6 +40,7 @@ Follow the installation instructions in the port repository for your editor, ter
 | VS Code, Cursor, VSCodium | [karazuri/vscode](https://github.com/karazuri/vscode) | VSIX |
 | Zed | [karazuri/zed](https://github.com/karazuri/zed) | Theme file or dev extension |
 | T3 Code | [karazuri/t3code](https://github.com/karazuri/t3code) | Theme files |
+| Zen Browser | [karazuri/zen](https://github.com/karazuri/zen) | Zen Mod or userChrome.css |
 | OpenCode, Codex CLI, Claude Code, Pi | [karazuri/extras](https://github.com/karazuri/extras#how-to-use) | Theme files |
 | JetBrains IDEs | [karazuri/extras](https://github.com/karazuri/extras#jetbrains-ides) | Installable plugin |
 | Ghostty, kitty, WezTerm, Alacritty, iTerm2, Windows Terminal, Helix, tmux, fzf, delta, bat, Sublime Text | [karazuri/extras](https://github.com/karazuri/extras#how-to-use) | Theme and config files |
@@ -67,6 +68,7 @@ python3 scripts/build.py nvim --out ../nvim
 python3 scripts/build.py vscode --out ../vscode
 python3 scripts/build.py zed --out ../zed
 python3 scripts/build.py t3code --out ../t3code
+python3 scripts/build.py zen --out ../zen
 python3 scripts/build.py extras --out ../extras
 
 # Build the Astro homepage, SVG previews, and theme downloads for GitHub Pages.

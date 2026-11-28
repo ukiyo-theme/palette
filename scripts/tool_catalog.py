@@ -53,6 +53,12 @@ GROUPS = [
                "Copy the file into ~/.pi/agent/themes/, restart or run /reload, then pick Theme in /settings. Your terminal supplies the session background.",
                variant_files("pi/karazuri-{}.json")),
     ]),
+    ("Browsers", [
+        ("Zen Browser", f"{ORG}/zen#how-to-use",
+         "For the Zen Mod with a variant setting, follow the install guide. Or copy a file into the chrome folder of your Zen profile as userChrome.css and set toolkit.legacyUserProfileCustomizations.stylesheets to true in about:config.",
+         [("Umi + Kami", "zen/karazuri.css"), ("Yoru + Kami", "zen/karazuri-yoru.css"),
+          ("Umi", "zen/karazuri-umi.css"), ("Kami", "zen/karazuri-kami.css")]),
+    ]),
     ("Terminals & CLI", [
         extras("ghostty", "Ghostty"),
         extras("kitty", "kitty"),
@@ -88,7 +94,7 @@ def render_tools():
         for name, guide, steps, files in tools:
             slug = name.lower().replace(" ", "-")
             action = f'<a href="{escape(guide)}" aria-label="{escape(name)} install guide">Install guide</a>'
-            extension = "png" if slug in {"t3-code", "kitty", "windows-terminal", "fzf", "ghostty"} else "svg"
+            extension = "png" if slug in {"t3-code", "kitty", "windows-terminal", "fzf", "ghostty", "zen-browser"} else "svg"
             icon = f'<img class="tool-icon" src="tool-icons/{slug}.{extension}" alt="" width="24" height="24" loading="lazy">'
             information = f'<span class="tool-name">{icon}{escape(name)}</span>'
             if files:
